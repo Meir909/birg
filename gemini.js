@@ -12,7 +12,7 @@ const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models
 // ---------- KEY MANAGEMENT ----------
 
 function getApiKey() {
-  return sessionStorage.getItem('birge_gemini_key') || '';
+  return sessionStorage.getItem('birge_gemini_key') || 'AIzaSyCadqN23kFCVhpSwAYY_seYr_MakaBUY28';
 }
 
 function setApiKey(key) {
@@ -20,11 +20,11 @@ function setApiKey(key) {
 }
 
 function clearApiKey() {
-  sessionStorage.removeItem('birge_gemini_key');
+  // Ничего не делаем, ключ уже встроен
 }
 
 function hasApiKey() {
-  return !!getApiKey();
+  return true; // Всегда true, т.к. ключ встроен в код
 }
 
 // ---------- CORE API CALL ----------

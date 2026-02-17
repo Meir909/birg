@@ -95,12 +95,8 @@ let isLoading = false;
 renderApiKeyBadge('key-badge');
 renderHistory();
 
-if (!hasApiKey()) {
-  addAIMsg('👋 Добро пожаловать в Birge AI!\n\nДля начала работы добавьте Gemini API ключ.\n\nПолучите бесплатно на aistudio.google.com → нажмите кнопку «Добавить ключ» вверху.');
-  renderApiKeyModal(() => location.reload());
-} else {
-  addAIMsg('👋 Привет! Я AI-ассистент Birge на базе Gemini 2.0 Flash.\n\nЧем могу помочь?\n🔍 Найти поездку\n🗺️ Оптимизировать маршрут\n👥 Подобрать группу\n❓ Ответить на любой вопрос о платформе');
-}
+// AI сразу готов к работе, встроенный ключ
+addAIMsg('👋 Привет! Я AI-ассистент Birge на базе Gemini 2.0 Flash.\n\nЧем могу помочь?\n🔍 Найти поездку\n🗺️ Оптимизировать маршрут\n👥 Подобрать группу\n❓ Ответить на любой вопрос о платформе');
 
 function aiAvatar() {
   return `<div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--ai),#6D28D9);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">🤖</div>`;
@@ -138,7 +134,7 @@ async function sendMsg() {
   const inp = document.getElementById('msg-input');
   const text = inp.value.trim();
   if (!text) return;
-  if (!hasApiKey()) { renderApiKeyModal(() => location.reload()); return; }
+  // Ключ уже встроен, проверка не нужна
 
   inp.value = '';
   addUserMsg(text);
