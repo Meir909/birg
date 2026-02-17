@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Мои поездки — Birge</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  page:'mytrips', title:'Мои поездки',
+  content:`
+    <div class="page-header">
+      <div class="page-title">Мои <span>поездки</span></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(0,this)">🚗 Как водитель</button>
+      <button class="tab" onclick="switchTab(1,this)">👤 Как пассажир</button>
+    </div>
+    <div id="tab0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <div style="color:var(--text2);font-size:0.875rem;">Создано поездок: <strong>2</strong></div>
+        <a href="trip-create.html" class="btn btn-primary btn-sm">➕ Создать поездку</a>
+      </div>
+      ${[
+        {id:'#1042',route:'Медеу → НИШ',days:'Пн–Пт',time:'07:45',members:4,maxMembers:4,status:'active',ai:91},
+        {id:'#1028',route:'Алматы → Школа №5',days:'Пн, Ср, Пт',time:'08:00',members:2,maxMembers:3,status:'active',ai:78},
+      ].map(t=>`
+        <div class="trip-card mb-1">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.75rem;">
+            <div>
+              <div style="font-family:var(--font-display);font-weight:700;">${t.route}</div>
+              <div style="font-size:0.8rem;color:var(--text2);">${t.id} · ${t.days} · ⏰ ${t.time}</div>
+            </div>
+            <span class="badge badge-green">Активна</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;">
+            <div style="flex:1;">
+              <div style="font-size:0.75rem;color:var(--text3);margin-bottom:0.3rem;">Заполненность: ${t.members}/${t.maxMembers}</div>
+              <div class="progress"><div class="progress-fill progress-blue" style="width:${(t.members/t.maxMembers)*100}%"></div></div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.75rem;color:var(--text3);">AI эффективность</div>
+              <div class="match-score match-high" style="font-size:1.2rem;">${t.ai}%</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.5rem;">
+            <a href="trip-detail.html" class="btn btn-secondary btn-sm" style="flex:1;">Открыть</a>
+            <button class="btn btn-secondary btn-sm" style="flex:1;">✏️ Редактировать</button>
+            <button class="btn btn-danger btn-sm">🗑️</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div id="tab1" style="display:none;">
+      ${[
+        {route:'Бостандык → НИШ',driver:'Азиз К.',rating:4.8,days:'Вт, Чт',time:'07:50',status:'active',ai:85},
+        {route:'Алмалы → Школа №1',driver:'Диана М.',rating:5.0,days:'Пн, Ср',time:'08:10',status:'completed',ai:72},
+        {route:'Медеу → НИШ',driver:'Самал Н.',rating:4.6,days:'Пн–Пт',time:'07:30',status:'cancelled',ai:0},
+      ].map(t=>`
+        <div class="trip-card mb-1">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.75rem;">
+            <div>
+              <div style="font-family:var(--font-display);font-weight:700;">${t.route}</div>
+              <div style="font-size:0.8rem;color:var(--text2);">Водитель: ${t.driver} · ★ ${t.rating} · ${t.days} · ⏰ ${t.time}</div>
+            </div>
+            <span class="badge ${t.status==='active'?'badge-green':t.status==='completed'?'badge-blue':'badge-red'}">${t.status==='active'?'Активна':t.status==='completed'?'Завершена':'Отменена'}</span>
+          </div>
+          ${t.ai > 0 ? `<div style="font-size:0.78rem;color:var(--ai2);margin-bottom:0.75rem;">🤖 AI-эффективность группы: ${t.ai}%</div>` : ''}
+          <div style="display:flex;gap:0.5rem;">
+            <a href="trip-detail.html" class="btn btn-secondary btn-sm" style="flex:1;">Открыть</a>
+            ${t.status==='completed'?'<button class="btn btn-secondary btn-sm" style="flex:1;">⭐ Отзыв</button>':''}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `
+});
+function switchTab(n, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab0').style.display = n===0?'block':'none';
+  document.getElementById('tab1').style.display = n===1?'block':'none';
+}
+</script>
+</body>
+</html>

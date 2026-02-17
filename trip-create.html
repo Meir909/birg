@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Создать поездку — Birge</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  page:'create', title:'Создать поездку',
+  content:`
+    <div class="page-header">
+      <div class="page-title">Создать <span>поездку</span></div>
+      <div class="page-subtitle">Настройте маршрут и расписание</div>
+    </div>
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <div class="card mb-2">
+          <h3 class="card-title mb-2">📅 Расписание</h3>
+          <div class="form-group">
+            <label class="form-label">Дни недели</label>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+              ${['Пн','Вт','Ср','Чт','Пт','Сб'].map((d,i)=>`<div class="chip ${i<5?'active':''}">${d}</div>`).join('')}
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label class="form-label">Время выезда</label>
+              <input class="form-input" type="time" value="07:30">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Время прибытия</label>
+              <input class="form-input" type="time" value="08:00">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Повторяющаяся поездка</label>
+            <div style="display:flex;gap:0.75rem;">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;"><input type="radio" name="repeat" checked> Да, еженедельно</label>
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;"><input type="radio" name="repeat"> Разовая</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-2">
+          <h3 class="card-title mb-2">📍 Маршрут</h3>
+          <div class="form-group">
+            <label class="form-label">Точка отправления</label>
+            <div style="display:flex;gap:0.5rem;">
+              <input class="form-input" placeholder="Введите адрес..." style="flex:1;">
+              <button class="btn btn-secondary btn-sm">📍 Гео</button>
+            </div>
+          </div>
+          <div class="map-area" style="height:180px;margin-bottom:1rem;">
+            <div class="map-label"><div class="icon">🗺️</div><div>Выберите точку на карте</div></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Школа (пункт назначения)</label>
+            <select class="form-select">
+              <option>НИШ Алматы</option><option>Школа №5</option><option>Школа №1</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title mb-2">👥 Пассажиры</h3>
+          <div class="form-group">
+            <label class="form-label">Свободных мест</label>
+            <div style="display:flex;align-items:center;gap:1rem;">
+              <button class="btn btn-secondary btn-sm" onclick="changeSeat(-1)">−</button>
+              <span id="seats" style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;min-width:40px;text-align:center;">3</span>
+              <button class="btn btn-secondary btn-sm" onclick="changeSeat(1)">+</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Дополнительные условия</label>
+            <textarea class="form-input" rows="3" placeholder="Наличие детского кресла, предпочтения и т.д."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI PANEL -->
+      <div>
+        <div class="ai-card mb-2">
+          <div class="ai-label mb-1"><span class="ai-pulse"></span> AI-ассистент водителя</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:0.75rem;">Оптимизация маршрута</h3>
+          <p style="font-size:0.875rem;color:var(--text2);margin-bottom:1rem;">AI проанализирует данные и предложит оптимальное время выезда и состав группы.</p>
+          <button class="btn btn-ai" style="width:100%;margin-bottom:0.75rem;">🤖 Получить рекомендации</button>
+          <div id="ai-result" style="display:none;background:var(--bg);border-radius:var(--radius-sm);padding:1rem;margin-top:0.5rem;">
+            <div style="font-size:0.82rem;color:var(--ai2);margin-bottom:0.5rem;">🤖 Анализ завершён</div>
+            <div style="font-size:0.875rem;margin-bottom:0.75rem;">Оптимальное время выезда: <strong>07:25</strong> (с учётом трафика)</div>
+            <div style="font-size:0.875rem;margin-bottom:0.5rem;">В вашем районе 4 потенциальных пассажира:</div>
+            ${['Мадина К. — 0.3 км','Азат Н. — 0.5 км','Диана Р. — 0.8 км','Ерлан М. — 1.1 км'].map(p=>`<div style="font-size:0.82rem;color:var(--text2);padding:0.3rem 0;border-bottom:1px solid var(--border);">👤 ${p}</div>`).join('')}
+          </div>
+        </div>
+
+        <div class="card mb-2">
+          <h3 class="card-title mb-1">📊 Предварительный расчёт</h3>
+          ${[
+            {label:'Общее расстояние',val:'12.4 км'},
+            {label:'Время в пути',val:'~28 мин'},
+            {label:'Экономия топлива',val:'~2.1 л/день'},
+            {label:'Экономия CO₂',val:'~4.9 кг/день'},
+          ].map(r=>`
+            <div style="display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.875rem;">
+              <span style="color:var(--text2);">${r.label}</span>
+              <strong>${r.val}</strong>
+            </div>
+          `).join('')}
+        </div>
+
+        <button class="btn btn-primary btn-xl" style="width:100%;" onclick="window.location.href='dashboard.html'">🚀 Создать поездку</button>
+      </div>
+    </div>
+  `
+});
+let seats=3;
+function changeSeat(d){seats=Math.max(1,Math.min(6,seats+d));document.getElementById('seats').textContent=seats;}
+document.querySelector('.btn-ai')?.addEventListener('click',()=>{
+  const r=document.getElementById('ai-result');
+  if(r){r.style.display='block';}
+});
+</script>
+</body>
+</html>

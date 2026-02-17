@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>История поездок — Birge</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/components.js"></script>
+<script>
+buildLayout({
+  page:'history', title:'История поездок',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div class="page-title">История <span>поездок</span></div>
+      <div style="display:flex;gap:0.5rem;">
+        <select class="form-select" style="width:auto;">
+          <option>Все месяцы</option><option>Февраль 2026</option><option>Январь 2026</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- AI ANALYSIS -->
+    <div class="ai-card mb-2">
+      <div class="ai-label mb-1"><span class="ai-pulse"></span>AI-анализ паттернов</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+        <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:1rem;">
+          <div style="font-size:0.78rem;color:var(--text3);margin-bottom:0.35rem;">Пик активности</div>
+          <div style="font-family:var(--font-display);font-weight:700;">Пн–Ср, 07:30–08:00</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:1rem;">
+          <div style="font-size:0.78rem;color:var(--text3);margin-bottom:0.35rem;">Любимый маршрут</div>
+          <div style="font-family:var(--font-display);font-weight:700;">Медеу → НИШ</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:1rem;">
+          <div style="font-size:0.78rem;color:var(--text3);margin-bottom:0.35rem;">Рекомендация</div>
+          <div style="font-size:0.82rem;color:var(--ai2);">Выезжайте в 07:25 по средам — меньше пробок</div>
+        </div>
+      </div>
+    </div>
+
+    ${[
+      {date:'Вт, 17 февраля',route:'Медеу → НИШ',driver:'Нурлан А.',time:'07:45',duration:'28 мин',rating:5,review:false},
+      {date:'Пн, 16 февраля',route:'Медеу → НИШ',driver:'Нурлан А.',time:'07:45',duration:'31 мин',rating:5,review:true},
+      {date:'Пт, 13 февраля',route:'Медеу → НИШ',driver:'Нурлан А.',time:'07:45',duration:'27 мин',rating:5,review:false},
+      {date:'Чт, 12 февраля',route:'Медеу → НИШ',driver:'Нурлан А.',time:'07:50',duration:'33 мин',rating:4,review:true},
+    ].map(t=>`
+      <div class="card mb-1">
+        <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:0.75rem;">
+          <div>
+            <div style="font-size:0.8rem;color:var(--text3);margin-bottom:0.25rem;">${t.date}</div>
+            <div style="font-family:var(--font-display);font-weight:700;">${t.route}</div>
+            <div style="font-size:0.82rem;color:var(--text2);margin-top:0.25rem;">Водитель: ${t.driver} · ⏰ ${t.time} · ⏱️ ${t.duration}</div>
+          </div>
+          <div style="display:flex;gap:0.5rem;align-items:center;">
+            <span class="badge badge-green">✅ Завершена</span>
+            ${t.review?'<span class="badge badge-blue">⭐ Отзыв</span>':'<button class="btn btn-secondary btn-sm">⭐ Оценить</button>'}
+          </div>
+        </div>
+      </div>
+    `).join('')}
+    <button class="btn btn-secondary" style="width:100%;margin-top:0.5rem;">Загрузить ещё</button>
+  `
+});
+</script>
+</body>
+</html>

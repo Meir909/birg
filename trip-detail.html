@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Поездка — Birge</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/components.js"></script>
+<script>
+buildLayout({
+  page:'mytrips', title:'Детали поездки',
+  content:`
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;">
+      <a href="my-trips.html" class="btn btn-secondary btn-sm">← Назад</a>
+      <div>
+        <div class="page-title" style="font-size:1.4rem;">Поездка #1042</div>
+        <div class="page-subtitle">Медеу → НИШ Алматы · Еженедельно</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:0.5rem;">
+        <span class="badge badge-green">✅ Активна</span>
+        <a href="live.html" class="btn btn-primary btn-sm">📍 Live трекинг</a>
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <!-- DRIVER INFO -->
+        <div class="card mb-2">
+          <h3 class="card-title mb-2">🚗 Водитель</h3>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <div class="avatar avatar-lg">Н</div>
+            <div style="flex:1;">
+              <div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;">Нурлан Аленов</div>
+              <div class="stars" style="font-size:1rem;">★★★★★ <span style="color:var(--text2);">4.9</span></div>
+              <div style="font-size:0.8rem;color:var(--text2);margin-top:0.25rem;">128 поездок · Водитель 3 года</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+              <button class="btn btn-secondary btn-sm">💬 Чат</button>
+              <button class="btn btn-secondary btn-sm">📞 Позвонить</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTE & SCHEDULE -->
+        <div class="card mb-2">
+          <h3 class="card-title mb-2">📅 Расписание</h3>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+            ${['Пн','Вт','Ср','Чт','Пт'].map(d=>`<span class="badge badge-blue">${d}</span>`).join('')}
+          </div>
+          <div style="display:flex;gap:2rem;">
+            <div><div style="font-size:0.78rem;color:var(--text3);">Выезд</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.3rem;">07:45</div></div>
+            <div><div style="font-size:0.78rem;color:var(--text3);">Прибытие</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.3rem;">08:15</div></div>
+            <div><div style="font-size:0.78rem;color:var(--text3);">В пути</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.3rem;">~30 мин</div></div>
+          </div>
+        </div>
+
+        <!-- AI ROUTE -->
+        <div class="ai-card mb-2">
+          <div class="ai-label mb-1"><span class="ai-pulse"></span> AI-оптимизированный маршрут</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h3 style="font-family:var(--font-display);font-weight:700;">Эффективность маршрута</h3>
+            <div class="match-score match-high" style="font-size:1.6rem;">94%</div>
+          </div>
+          <div class="progress mb-1"><div class="progress-fill progress-purple" style="width:94%"></div></div>
+          <p style="font-size:0.82rem;color:var(--text2);margin-bottom:0.75rem;">🤖 Маршрут оптимален. AI учитывает пробки на Аль-Фараби и предлагает заезд через Тимирязева.</p>
+          <button class="btn btn-ai btn-sm">🔄 Пересчитать маршрут</button>
+        </div>
+
+        <!-- MAP -->
+        <div class="map-area" style="height:220px;">
+          <div class="map-label"><div class="icon">🗺️</div><div>Карта маршрута с остановками</div></div>
+        </div>
+      </div>
+
+      <div>
+        <!-- MEMBERS -->
+        <div class="card mb-2">
+          <div class="card-header">
+            <h3 class="card-title">👥 Участники (4/4)</h3>
+          </div>
+          ${[
+            {name:'Айгерим Н.', class:'6Б', role:'Пассажир', stop:'ул. Абая 32', status:'conf'},
+            {name:'Мадина С.', class:'5А', role:'Пассажир', stop:'пр. Достык 14', status:'conf'},
+            {name:'Данияр К.', class:'7В', role:'Пассажир', stop:'ул. Розыбакиева 5', status:'wait'},
+            {name:'Нурлан А.', class:'—', role:'Водитель', stop:'Медеу', status:'driv'},
+          ].map((m,i)=>`
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid var(--border);">
+              <div class="avatar avatar-sm">${m.name[0]}</div>
+              <div style="flex:1;">
+                <div style="font-size:0.875rem;font-weight:500;">${m.name} · ${m.class}</div>
+                <div style="font-size:0.78rem;color:var(--text2);">📍 ${m.stop}</div>
+              </div>
+              <span class="badge ${m.status==='driv'?'badge-purple':m.status==='conf'?'badge-green':'badge-gray'}">${m.status==='driv'?'Водитель':m.status==='conf'?'Подтверждён':'Ожидает'}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- GROUP CHAT -->
+        <div class="card mb-2">
+          <div class="card-header">
+            <h3 class="card-title">💬 Чат группы</h3>
+            <span class="ai-label" style="font-size:0.7rem;"><span class="ai-pulse"></span>AI здесь</span>
+          </div>
+          <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:0.75rem;max-height:200px;overflow-y:auto;margin-bottom:0.75rem;">
+            ${[
+              {name:'Нурлан А.', msg:'Завтра выезжаю в 7:40, пробки по Абая', time:'18:32'},
+              {name:'AI Birge 🤖', msg:'Рекомендую выехать в 7:35 — ДТП на Сейфуллина', time:'18:33'},
+              {name:'Айгерим', msg:'Хорошо, буду готова!', time:'18:35'},
+              {name:'Мадина', msg:'Спасибо за предупреждение 👍', time:'18:36'},
+            ].map(m=>`
+              <div style="margin-bottom:0.75rem;">
+                <span style="font-size:0.75rem;font-weight:600;color:${m.name.includes('AI')?'var(--ai2)':'var(--text)'};">${m.name}</span>
+                <span style="font-size:0.7rem;color:var(--text3);margin-left:0.5rem;">${m.time}</span>
+                <div style="font-size:0.82rem;margin-top:0.15rem;">${m.msg}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div style="display:flex;gap:0.5rem;">
+            <input class="form-input" placeholder="Написать..." style="flex:1;">
+            <button class="btn btn-primary btn-sm">→</button>
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div style="display:flex;gap:0.75rem;flex-direction:column;">
+          <button class="btn btn-danger" style="width:100%;">🚪 Выйти из поездки</button>
+        </div>
+      </div>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

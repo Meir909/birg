@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Birge — Совместные поездки в школу</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { background: var(--bg); }
+.hero {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  text-align: center; position: relative; overflow: hidden;
+  padding: 2rem;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: 
+    radial-gradient(ellipse 800px 600px at 20% 40%, rgba(61,126,255,0.08), transparent),
+    radial-gradient(ellipse 600px 400px at 80% 60%, rgba(139,92,246,0.07), transparent),
+    radial-gradient(ellipse 400px 300px at 50% 80%, rgba(0,212,170,0.05), transparent);
+}
+.hero-grid {
+  position: absolute; inset: 0; z-index: 0;
+  background: 
+    linear-gradient(rgba(61,126,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61,126,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-content { position: relative; z-index: 1; max-width: 760px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.3);
+  color: var(--ai2); padding: 0.4rem 1rem; border-radius: 20px;
+  font-size: 0.82rem; font-weight: 600; margin-bottom: 2rem;
+  animation: fadeIn 0.6s ease;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem;
+  animation: fadeIn 0.7s 0.1s ease both;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--accent), var(--ai2), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 1.1rem; color: var(--text2); max-width: 540px; margin: 0 auto 2.5rem;
+  animation: fadeIn 0.7s 0.2s ease both;
+}
+.hero-actions {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  animation: fadeIn 0.7s 0.3s ease both;
+}
+.stats-row {
+  display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;
+  margin-top: 3rem; padding-top: 3rem;
+  border-top: 1px solid var(--border);
+  animation: fadeIn 0.7s 0.4s ease both;
+}
+.stat-item { text-align: center; }
+.stat-item .num {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.stat-item .lbl { font-size: 0.8rem; color: var(--text3); margin-top: 0.25rem; }
+
+/* HOW IT WORKS */
+.section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+.section-title {
+  font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
+  text-align: center; margin-bottom: 0.75rem;
+}
+.section-title span { background: linear-gradient(135deg, var(--accent), var(--ai2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.section-sub { text-align: center; color: var(--text2); margin-bottom: 3rem; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+.step {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2rem 1.5rem;
+  text-align: center; transition: all 0.3s;
+  position: relative;
+}
+.step:hover { border-color: rgba(61,126,255,0.4); transform: translateY(-4px); }
+.step-num {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--ai));
+  color: white; font-family: var(--font-display); font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem; font-size: 1.1rem;
+}
+.step h3 { font-family: var(--font-display); font-weight: 700; margin-bottom: 0.5rem; }
+.step p { font-size: 0.875rem; color: var(--text2); }
+
+/* FEATURES */
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+.feature {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.75rem;
+  transition: all 0.3s;
+}
+.feature:hover { border-color: rgba(61,126,255,0.3); }
+.feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+.feature h3 { font-family: var(--font-display); font-weight: 700; margin-bottom: 0.5rem; }
+.feature p { font-size: 0.875rem; color: var(--text2); }
+.feature.ai-feature { border-color: rgba(139,92,246,0.3); background: linear-gradient(135deg, rgba(139,92,246,0.05), var(--card)); }
+
+/* AI BLOCK */
+.ai-section {
+  background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(61,126,255,0.05));
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: 24px; padding: 3rem;
+  text-align: center; margin: 2rem auto;
+  max-width: 1100px;
+}
+.ai-section h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+.ai-chips { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+.ai-chip {
+  background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.25);
+  color: var(--ai2); padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.82rem;
+}
+
+/* CTA SECTION */
+.cta-section {
+  padding: 5rem 2rem; text-align: center;
+  background: linear-gradient(135deg, rgba(61,126,255,0.05), rgba(0,212,170,0.03));
+  border-top: 1px solid var(--border);
+}
+.cta-section h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+.cta-section p { color: var(--text2); margin-bottom: 2rem; }
+
+/* NAVBAR for landing */
+.landing-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,14,26,0.9); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+</style>
+</head>
+<body>
+<nav class="landing-nav">
+  <a href="index.html" class="nav-logo">🚗 Birge</a>
+  <div class="nav-links">
+    <a href="#how" style="color:var(--text2);text-decoration:none;padding:0.5rem 1rem;font-size:0.9rem;">Как работает</a>
+    <a href="#features" style="color:var(--text2);text-decoration:none;padding:0.5rem 1rem;font-size:0.9rem;">Преимущества</a>
+    <a href="about.html" style="color:var(--text2);text-decoration:none;padding:0.5rem 1rem;font-size:0.9rem;">О проекте</a>
+  </div>
+  <div class="nav-actions" style="display:flex;gap:0.75rem;">
+    <a href="login.html" class="btn btn-secondary btn-sm">Войти</a>
+    <a href="register.html" class="btn btn-primary btn-sm">Регистрация</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="ai-pulse"></span>
+      AI-powered платформа для совместных поездок
+    </div>
+    <h1>Безопасные поездки<br>в школу вместе с <span class="accent">Birge</span></h1>
+    <p>Объединяйте родителей из одного района. Сокращайте пробки, экономьте время и берегите природу — с умным AI-ассистентом.</p>
+    <div class="hero-actions">
+      <a href="register.html" class="btn btn-primary btn-xl">🚀 Начать бесплатно</a>
+      <a href="search.html" class="btn btn-secondary btn-xl">🔍 Найти поездку</a>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="num">1,247</div><div class="lbl">Родителей</div></div>
+      <div class="stat-item"><div class="num">8,930</div><div class="lbl">Поездок</div></div>
+      <div class="stat-item"><div class="num">2.4т</div><div class="lbl">CO₂ сэкономлено</div></div>
+      <div class="stat-item"><div class="num">47</div><div class="lbl">Школ</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <h2 class="section-title">Как это <span>работает</span></h2>
+  <p class="section-sub">Всего 4 шага до первой совместной поездки</p>
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num">1</div>
+      <h3>Регистрация</h3>
+      <p>Укажите школу, район и данные о ребёнке. Займёт 2 минуты.</p>
+    </div>
+    <div class="step fade-in" style="animation-delay:0.1s">
+      <div class="step-num">2</div>
+      <h3>AI-подбор</h3>
+      <p>Наш алгоритм находит идеальных соседей по маршруту.</p>
+    </div>
+    <div class="step fade-in" style="animation-delay:0.2s">
+      <div class="step-num">3</div>
+      <h3>Знакомство</h3>
+      <p>Познакомьтесь с группой в чате и договоритесь об условиях.</p>
+    </div>
+    <div class="step fade-in" style="animation-delay:0.3s">
+      <div class="step-num">4</div>
+      <h3>Поездки!</h3>
+      <p>Ездите вместе, отслеживайте маршрут в реальном времени.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AI BLOCK -->
+<div style="padding:0 2rem;">
+  <div class="ai-section">
+    <div class="ai-label" style="display:inline-flex;margin-bottom:1rem;">
+      <span class="ai-pulse"></span> Gemini Flash 2.5
+    </div>
+    <h2>🤖 AI-ассистент всегда рядом</h2>
+    <p style="color:var(--text2);max-width:540px;margin:0 auto;">Просто напишите: «Найди поездку на завтра в 8:00» — и AI сделает всё за вас. Умный подбор, оптимизация маршрута, прогноз времени.</p>
+    <div class="ai-chips">
+      <div class="ai-chip">🔍 Умный поиск</div>
+      <div class="ai-chip">🗺️ Оптимизация маршрута</div>
+      <div class="ai-chip">⏰ Прогноз прибытия</div>
+      <div class="ai-chip">👥 Подбор участников</div>
+      <div class="ai-chip">📊 Анализ паттернов</div>
+      <div class="ai-chip">🌿 Экоинсайты</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <h2 class="section-title">Почему <span>Birge</span></h2>
+  <p class="section-sub">Безопасность, удобство и экология в одном приложении</p>
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">🔒</div>
+      <h3>Безопасность</h3>
+      <p>Верифицированные пользователи, SOS-кнопка, live-трекинг и доверенные контакты.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⏱️</div>
+      <h3>Экономия времени</h3>
+      <p>Меньше поездок в пробках. Очерёдность позволяет 80% утра провести дома.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌿</div>
+      <h3>Экология</h3>
+      <p>Каждая совместная поездка снижает CO₂ выбросы. Следите за своим вкладом.</p>
+    </div>
+    <div class="feature ai-feature">
+      <div class="feature-icon">🤖</div>
+      <h3>AI-помощник</h3>
+      <p>Gemini Flash 2.5 анализирует данные и предлагает оптимальные группы и маршруты.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">👨‍👩‍👧</div>
+      <h3>Сообщество</h3>
+      <p>Познакомьтесь с соседями, создайте доверенную группу для ваших детей.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📍</div>
+      <h3>Трекинг</h3>
+      <p>Знайте где ваш ребёнок в каждый момент поездки. Уведомления при прибытии.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Готовы начать?</h2>
+  <p>Присоединяйтесь к 1 247 родителям, которые уже ездят вместе</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="register.html" class="btn btn-primary btn-xl">Зарегистрироваться</a>
+    <a href="ai-assistant.html" class="btn btn-ai btn-xl">🤖 Попробовать AI</a>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:2rem;color:var(--text3);font-size:0.85rem;border-top:1px solid var(--border);">
+  © 2024 Birge · <a href="about.html" style="color:var(--text3);">О проекте</a> · <a href="faq.html" style="color:var(--text3);">FAQ</a>
+</footer>
+</body>
+</html>

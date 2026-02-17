@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Школы — Birge Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  isAdmin:true, adminPage:'schools', title:'Школы',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div class="page-title">Управление школами</div>
+      <button class="btn btn-primary" onclick="document.getElementById('add-form').style.display='block'">➕ Добавить школу</button>
+    </div>
+
+    <div class="card mb-2" id="add-form" style="display:none;border-color:rgba(61,126,255,0.3);">
+      <h3 class="card-title mb-2">➕ Новая школа</h3>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Название</label><input class="form-input" placeholder="Название школы..."></div>
+        <div class="form-group"><label class="form-label">Район</label><select class="form-select"><option>Медеу</option><option>Бостандык</option><option>Алмалы</option><option>Алатау</option></select></div>
+        <div class="form-group"><label class="form-label">Адрес</label><input class="form-input" placeholder="Полный адрес..."></div>
+        <div class="form-group"><label class="form-label">Тип</label><select class="form-select"><option>Общеобразовательная</option><option>НИШ</option><option>БИЛ</option><option>Лицей</option></select></div>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+        <button class="btn btn-primary btn-sm">Добавить</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('add-form').style.display='none'">Отмена</button>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="table">
+        <thead><tr><th>Школа</th><th>Район</th><th>Пользователей</th><th>Поездок/мес</th><th>AI активность</th><th>Статус</th><th>Действия</th></tr></thead>
+        <tbody>
+          ${[
+            {name:'НИШ Алматы',district:'Медеу',users:342,trips:1240,ai:94},
+            {name:'Школа №5 им. Абая',district:'Алмалы',users:187,trips:620,ai:82},
+            {name:'БИЛ Алматы',district:'Бостандык',users:156,trips:480,ai:78},
+            {name:'Школа №1',district:'Алатау',users:98,trips:310,ai:71},
+            {name:'Лицей №165',district:'Турксиб',users:72,trips:198,ai:65},
+          ].map(s=>`
+            <tr>
+              <td style="font-weight:600;">${s.name}</td>
+              <td style="font-size:0.875rem;color:var(--text2);">${s.district}</td>
+              <td style="font-family:var(--font-display);font-weight:700;">${s.users}</td>
+              <td>${s.trips}</td>
+              <td><span class="badge ${s.ai>=90?'badge-purple':s.ai>=80?'badge-blue':'badge-gray'}">🤖 ${s.ai}%</span></td>
+              <td><span class="badge badge-green">✅ Активна</span></td>
+              <td><div style="display:flex;gap:0.3rem;"><button class="btn btn-secondary btn-sm">✏️</button><button class="btn btn-secondary btn-sm">📊</button></div></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

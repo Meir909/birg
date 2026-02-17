@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Оптимизация маршрута — Birge</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/components.js"></script>
+<script>
+buildLayout({
+  page:'optimize', title:'AI Оптимизация',
+  content:`
+    <div class="page-header">
+      <div class="page-title">AI <span>Оптимизация</span> маршрута</div>
+      <div class="page-subtitle">Для водителей — рассчитайте идеальный порядок остановок</div>
+    </div>
+    <div class="grid-2" style="align-items:start;">
+      <div>
+        <div class="card mb-2">
+          <h3 class="card-title mb-2">👥 Участники маршрута</h3>
+          <div id="stops-list">
+            ${[
+              {name:'Айгерим Н.', addr:'ул. Абая 32', time:'07:30–07:50'},
+              {name:'Мадина С.', addr:'пр. Достык 14', time:'07:35–07:55'},
+              {name:'Данияр К.', addr:'ул. Розыбакиева 5', time:'07:40–08:05'},
+            ].map((s,i)=>`
+              <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid var(--border);" id="stop-${i}">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:0.85rem;flex-shrink:0;">${i+1}</div>
+                <div style="flex:1;">
+                  <div style="font-size:0.875rem;font-weight:500;">${s.name}</div>
+                  <div style="font-size:0.78rem;color:var(--text2);">📍 ${s.addr}</div>
+                </div>
+                <div style="font-size:0.78rem;color:var(--text3);">⏰ ${s.time}</div>
+                <button class="btn btn-secondary btn-sm">✕</button>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-secondary btn-sm" style="margin-top:0.75rem;">➕ Добавить участника</button>
+        </div>
+
+        <div class="card mb-2">
+          <h3 class="card-title mb-2">🎛️ Параметры</h3>
+          <div class="form-group">
+            <label class="form-label">Точка старта (водитель)</label>
+            <div style="display:flex;gap:0.5rem;">
+              <input class="form-input" value="Медеу, Алматы" style="flex:1;">
+              <button class="btn btn-secondary btn-sm">📍</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Пункт назначения</label>
+            <select class="form-select"><option>НИШ Алматы</option><option>Школа №5</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Время прибытия в школу</label>
+            <input class="form-input" type="time" value="08:30">
+          </div>
+          <button class="btn btn-ai" style="width:100%;" onclick="showResult()">🤖 Рассчитать оптимальный маршрут</button>
+        </div>
+      </div>
+
+      <!-- RESULT PANEL -->
+      <div>
+        <div class="map-area" style="height:260px;margin-bottom:1.25rem;">
+          <div class="map-label">
+            <div style="font-size:2rem;">🗺️</div>
+            <div style="font-weight:600;margin-top:0.5rem;">Оптимизированный маршрут</div>
+            <div style="font-size:0.8rem;margin-top:0.25rem;color:var(--text3);">Пронумерованные точки остановок</div>
+          </div>
+        </div>
+
+        <div class="ai-card mb-2" id="result-card">
+          <div class="ai-label mb-1"><span class="ai-pulse"></span> Результат AI-оптимизации</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:1rem;">Оптимальный маршрут</h3>
+          
+          ${[
+            {stop:'🏠 Старт — Медеу',dur:'—',dist:'—',cum:'0 км'},
+            {stop:'📍 1. Данияр К. — Розыбакиева 5',dur:'8 мин',dist:'2.1 км',cum:'2.1 км'},
+            {stop:'📍 2. Айгерим Н. — Абая 32',dur:'5 мин',dist:'1.4 км',cum:'3.5 км'},
+            {stop:'📍 3. Мадина С. — Достык 14',dur:'7 мин',dist:'1.8 км',cum:'5.3 км'},
+            {stop:'🏫 НИШ Алматы',dur:'12 мин',dist:'3.2 км',cum:'8.5 км'},
+          ].map((r,i)=>`
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid rgba(139,92,246,0.15);">
+              <div style="width:24px;height:24px;border-radius:50%;background:${i===0?'var(--accent2)':i===4?'var(--accent3)':'var(--ai)'};display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:white;flex-shrink:0;">${i===0?'▶':i===4?'🏁':i}</div>
+              <div style="flex:1;font-size:0.82rem;">${r.stop}</div>
+              <div style="font-size:0.75rem;color:var(--text3);text-align:right;"><div>${r.dur}</div><div>${r.dist}</div></div>
+            </div>
+          `).join('')}
+
+          <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            ${[
+              {l:'Общее время',v:'32 мин'},
+              {l:'Общее расстояние',v:'8.5 км'},
+              {l:'Экономия (неопт.)',v:'-7 мин'},
+              {l:'Топливо',v:'~0.9 л'},
+            ].map(r=>`
+              <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:0.75rem;text-align:center;">
+                <div style="font-size:0.72rem;color:var(--text3);">${r.l}</div>
+                <div style="font-family:var(--font-display);font-weight:700;color:var(--ai2);">${r.v}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- COMPARISON -->
+        <div class="card">
+          <h3 class="card-title mb-2">📊 Сравнение с неоптимизированным</h3>
+          ${[
+            {label:'Время в пути',before:'39 мин',after:'32 мин',saved:'−7 мин'},
+            {label:'Расстояние',before:'11.3 км',after:'8.5 км',saved:'−2.8 км'},
+            {label:'Топливо',before:'1.2 л',after:'0.9 л',saved:'−0.3 л'},
+          ].map(c=>`
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
+              <span style="flex:1;color:var(--text2);">${c.label}</span>
+              <span style="color:var(--text3);text-decoration:line-through;">${c.before}</span>
+              <span style="color:var(--text);">→ ${c.after}</span>
+              <span class="badge badge-green">${c.saved}</span>
+            </div>
+          `).join('')}
+          <button class="btn btn-primary" style="width:100%;margin-top:1rem;" onclick="alert('Маршрут сохранён!')">💾 Применить маршрут</button>
+        </div>
+      </div>
+    </div>
+  `
+});
+function showResult(){alert('🤖 Оптимизация завершена!\nПорядок остановок рассчитан.');}
+</script>
+</body>
+</html>

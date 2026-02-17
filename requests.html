@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Заявки — Birge</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/components.js"></script>
+<script>
+buildLayout({
+  page:'requests', title:'Заявки',
+  content:`
+    <div class="page-header">
+      <div class="page-title">Заявки</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(0,this)">📨 Входящие (2)</button>
+      <button class="tab" onclick="switchTab(1,this)">📤 Исходящие</button>
+      <button class="tab" onclick="switchTab(2,this)">📖 История</button>
+    </div>
+    <div id="tab0">
+      ${[
+        {name:'Азат Нурмагамбетов',class:'7А',school:'НИШ',district:'Медеу',match:91,ai:'Отличное совпадение: один район, похожее расписание'},
+        {name:'Диана Сейткали',class:'6Б',school:'НИШ',district:'Медеу',match:84,ai:'Хорошая совместимость, небольшой крюк +2 мин'},
+      ].map(r=>`
+        <div class="card mb-1">
+          <div style="display:flex;align-items:start;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+            <div style="display:flex;gap:0.75rem;align-items:center;">
+              <div class="avatar avatar-md">${r.name[0]}</div>
+              <div>
+                <div style="font-weight:600;">${r.name}</div>
+                <div style="font-size:0.8rem;color:var(--text2);">${r.class} · ${r.school} · район ${r.district}</div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div class="match-score match-high" style="font-size:1.3rem;">${r.match}%</div>
+              <div style="font-size:0.72rem;color:var(--text3);">AI совместимость</div>
+            </div>
+          </div>
+          <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:0.75rem;margin:0.75rem 0;font-size:0.82rem;color:var(--ai2);">🤖 ${r.ai}</div>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-success btn-sm" style="flex:1;">✅ Принять</button>
+            <button class="btn btn-danger btn-sm" style="flex:1;">❌ Отклонить</button>
+            <button class="btn btn-secondary btn-sm">👤 Профиль</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div id="tab1" style="display:none;">
+      <div class="card" style="text-align:center;padding:3rem;color:var(--text3);">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">📤</div>
+        <div>Нет исходящих заявок</div>
+        <a href="search.html" class="btn btn-primary btn-sm" style="margin-top:1rem;">Найти поездку</a>
+      </div>
+    </div>
+    <div id="tab2" style="display:none;">
+      ${[
+        {name:'Самал Н.',status:'Принята',date:'12 фев',match:88},
+        {name:'Ерлан М.',status:'Отклонена',date:'8 фев',match:62},
+      ].map(r=>`
+        <div class="card mb-1 flex justify-between items-center">
+          <div style="display:flex;gap:0.75rem;align-items:center;">
+            <div class="avatar avatar-sm">${r.name[0]}</div>
+            <div><div style="font-size:0.875rem;font-weight:500;">${r.name}</div><div style="font-size:0.78rem;color:var(--text2);">${r.date} · AI: ${r.match}%</div></div>
+          </div>
+          <span class="badge ${r.status==='Принята'?'badge-green':'badge-red'}">${r.status}</span>
+        </div>
+      `).join('')}
+    </div>
+  `
+});
+function switchTab(n,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');['tab0','tab1','tab2'].forEach((id,i)=>{document.getElementById(id).style.display=i===n?'block':'none';});}
+</script>
+</body>
+</html>

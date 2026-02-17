@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Уведомления — Birge</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+const notifs = [
+  {icon:'🤖',title:'AI нашёл для вас 3 новые группы',body:'Совместимость 91%, 87%, 83% — в вашем районе',time:'5 мин',type:'ai',read:false},
+  {icon:'✅',title:'Азиз принял вашу заявку',body:'Поездка Медеу → НИШ · Пн–Пт · 07:45',time:'1 ч',type:'trip',read:false},
+  {icon:'📍',title:'Поездка начнётся через 30 минут',body:'Водитель Нурлан уже выехал',time:'2 ч',type:'live',read:false},
+  {icon:'⭐',title:'Нурлан оставил отзыв — 5 звёзд',body:'"Всегда пунктуальна, приятно ездить вместе"',time:'Вчера',type:'review',read:true},
+  {icon:'🤖',title:'AI: оптимальное время выезда завтра — 07:35',body:'Из-за пробок на Аль-Фараби рекомендуем выехать раньше',time:'Вчера',type:'ai',read:true},
+  {icon:'👤',title:'Новая заявка в вашу группу',body:'Диана Сейткали хочет присоединиться · AI: 84%',time:'Вчера',type:'request',read:true},
+  {icon:'🏅',title:'Вы получили значок "10 поездок"!',body:'Продолжайте — следующий: 25 поездок',time:'2 дня',type:'badge',read:true},
+];
+buildLayout({
+  page:'notifications', title:'Уведомления',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div class="page-title">Уведомления</div>
+      <button class="btn btn-secondary btn-sm" onclick="markAll()">✓ Прочитать все</button>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+      ${['Все','AI','Поездки','Заявки','Достижения'].map((f,i)=>`<div class="chip ${i===0?'active':''}">${f}</div>`).join('')}
+    </div>
+    <div id="notif-list">
+      ${notifs.map((n,i)=>`
+        <div style="display:flex;align-items:start;gap:1rem;padding:1rem;border-radius:var(--radius-sm);margin-bottom:0.5rem;background:${n.read?'transparent':'rgba(61,126,255,0.04)'};border:1px solid ${n.read?'transparent':'rgba(61,126,255,0.1)'};" id="n${i}">
+          <div style="width:40px;height:40px;border-radius:50%;background:${n.type==='ai'?'rgba(139,92,246,0.15)':'var(--bg3)'};display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">${n.icon}</div>
+          <div style="flex:1;">
+            <div style="font-size:0.875rem;font-weight:${n.read?'400':'600'};">${n.title}</div>
+            <div style="font-size:0.8rem;color:var(--text2);margin-top:0.2rem;">${n.body}</div>
+            <div style="font-size:0.72rem;color:var(--text3);margin-top:0.35rem;">${n.time} назад</div>
+          </div>
+          ${!n.read?'<div class="notif-dot" style="margin-top:0.4rem;"></div>':''}
+        </div>
+      `).join('')}
+    </div>
+  `
+});
+function markAll(){
+  document.querySelectorAll('[id^="n"]').forEach(el=>{
+    el.style.background='transparent';el.style.border='1px solid transparent';
+    const dot=el.querySelector('.notif-dot');if(dot)dot.remove();
+    const title=el.querySelector('div>div');if(title)title.style.fontWeight='400';
+  });
+}
+</script>
+</body>
+</html>

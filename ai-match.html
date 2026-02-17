@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Подбор — Birge</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/components.js"></script>
+<script>
+buildLayout({
+  page:'aimatch', title:'AI Matching',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div>
+        <div class="page-title">AI <span>Matching</span> Dashboard</div>
+        <div class="page-subtitle">Умный подбор групп на основе ваших данных</div>
+      </div>
+      <button class="btn btn-ai btn-lg" onclick="runAnalysis()">🤖 Запустить анализ</button>
+    </div>
+
+    <!-- AI VISUALIZATION -->
+    <div class="ai-card mb-2">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <div>
+          <div class="ai-label mb-1"><span class="ai-pulse"></span> Алгоритм работает</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;">Анализ данных пользователей</h3>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.8rem;color:var(--text2);">Проанализировано</div>
+          <div style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--ai2);">1,247</div>
+          <div style="font-size:0.75rem;color:var(--text3);">пользователей</div>
+        </div>
+      </div>
+      <!-- FAKE CLUSTER MAP -->
+      <div class="map-area" style="height:260px;margin-bottom:1rem;">
+        <div class="map-label">
+          <div style="font-size:2rem;">🗺️</div>
+          <div style="font-weight:600;margin-top:0.5rem;">Карта кластеров</div>
+          <div style="font-size:0.8rem;margin-top:0.25rem;">47 активных кластеров найдено</div>
+          <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:0.75rem;flex-wrap:wrap;">
+            <span class="badge badge-purple">🔵 Высокая плотность</span>
+            <span class="badge badge-blue">⚪ Средняя</span>
+            <span class="badge badge-gray">⚫ Низкая</span>
+          </div>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-value">47</div><div class="stat-label">Кластеров</div></div>
+        <div class="stat-card"><div class="stat-value">94%</div><div class="stat-label">Точность алгоритма</div></div>
+        <div class="stat-card"><div class="stat-value">2.8км</div><div class="stat-label">Средний радиус</div></div>
+        <div class="stat-card"><div class="stat-value">312</div><div class="stat-label">Подбора сегодня</div></div>
+      </div>
+    </div>
+
+    <!-- AI FILTERS -->
+    <div class="card mb-2">
+      <h3 class="card-title mb-2">🎛️ Параметры AI-подбора</h3>
+      <div class="grid-3">
+        <div class="form-group">
+          <label class="form-label">Приоритет</label>
+          <select class="form-select">
+            <option>⏰ Время</option>
+            <option>📍 Расстояние</option>
+            <option>🛡️ Безопасность</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Гибкость расписания</label>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <input type="range" min="0" max="30" value="15" style="flex:1;" oninput="this.nextElementSibling.textContent='±'+this.value+'мин'">
+            <span style="color:var(--text2);min-width:55px;">±15мин</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Мин. совместимость</label>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <input type="range" min="50" max="100" value="75" style="flex:1;" oninput="this.nextElementSibling.textContent=this.value+'%'">
+            <span style="color:var(--text2);min-width:40px;">75%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP MATCHES -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <h3 style="font-family:var(--font-display);font-weight:700;">🏆 Топ-5 оптимальных групп</h3>
+    </div>
+    ${[
+      {name:'Группа Медеу-А',match:96,members:4,eco:'4.9кг CO₂',time:'Экономия 22 мин/день',reason:'Идеальное совпадение: район, школа, время выезда'},
+      {name:'Группа Бостандык-3',match:91,members:3,eco:'3.8кг CO₂',time:'Экономия 18 мин/день',reason:'Близкий маршрут, похожее расписание'},
+      {name:'Группа НИШ-Центр',match:87,members:5,eco:'6.1кг CO₂',time:'Экономия 15 мин/день',reason:'Максимальная экономия топлива'},
+      {name:'Группа Алмалы-2',match:83,members:3,eco:'3.2кг CO₂',time:'Экономия 12 мин/день',reason:'Хорошие рейтинги участников (4.8+)'},
+      {name:'Группа Достык',match:76,members:4,eco:'4.1кг CO₂',time:'Экономия 9 мин/день',reason:'Чуть дальше, но все дети одного класса'},
+    ].map((g,i)=>`
+      <div class="card mb-1">
+        <div style="display:flex;align-items:start;gap:1rem;flex-wrap:wrap;">
+          <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--ai),#6D28D9);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;color:white;flex-shrink:0;">${i+1}</div>
+          <div style="flex:1;min-width:200px;">
+            <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.35rem;">
+              <span style="font-family:var(--font-display);font-weight:700;">${g.name}</span>
+              <span class="badge ${g.match>=90?'badge-green':g.match>=80?'badge-blue':'badge-gray'}">${g.match}% совместимость</span>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text2);margin-bottom:0.35rem;">🤖 ${g.reason}</div>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+              <span class="badge badge-blue">👥 ${g.members} участника</span>
+              <span class="badge badge-green">🌿 ${g.eco}/день</span>
+              <span class="badge badge-purple">⏰ ${g.time}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;flex-shrink:0;">
+            <a href="search.html" class="btn btn-primary btn-sm">Подать заявку</a>
+            <a href="trip-detail.html" class="btn btn-secondary btn-sm">Подробнее</a>
+          </div>
+        </div>
+        <div style="margin-top:0.75rem;">
+          <div class="progress"><div class="progress-fill progress-purple" style="width:${g.match}%"></div></div>
+        </div>
+      </div>
+    `).join('')}
+
+    <button class="btn btn-ai" style="width:100%;margin-top:0.5rem;" onclick="alert('Создаём оптимальную группу...')">✨ Создать оптимальную группу автоматически</button>
+  `
+});
+function runAnalysis() {
+  alert('🤖 AI-анализ запущен!\nОбрабатываем 1,247 пользователей...\nОбновлено через несколько секунд.');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Поездки — Birge Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  isAdmin:true, adminPage:'trips', title:'Поездки — Администрирование',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div class="page-title">Все поездки</div>
+      <div style="display:flex;gap:0.5rem;">
+        <input class="form-input" placeholder="Поиск поездки..." style="width:200px;">
+        <select class="form-select" style="width:auto;"><option>Все статусы</option><option>Активные</option><option>Завершённые</option><option>Отменённые</option></select>
+      </div>
+    </div>
+    <div class="stat-grid mb-2">
+      <div class="stat-card"><div class="stat-value">142</div><div class="stat-label">Активных поездок</div></div>
+      <div class="stat-card"><div class="stat-value">8,788</div><div class="stat-label">Завершённых</div></div>
+      <div class="stat-card"><div class="stat-value">89%</div><div class="stat-label">Успешность (AI)</div></div>
+      <div class="stat-card"><div class="stat-value">3.8</div><div class="stat-label">Среднее участников</div></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="table">
+        <thead><tr><th>ID</th><th>Маршрут</th><th>Водитель</th><th>Участники</th><th>Время</th><th>AI-эфф.</th><th>Статус</th><th>Действия</th></tr></thead>
+        <tbody>
+          ${[
+            {id:'#1042',route:'Медеу → НИШ',driver:'Нурлан А.',members:'4/4',time:'07:45',ai:94,status:'active'},
+            {id:'#1041',route:'Бостандык → НИШ',driver:'Азиз К.',members:'3/4',time:'08:00',ai:81,status:'active'},
+            {id:'#1040',route:'Алмалы → Школа №5',driver:'Самал Н.',members:'2/3',time:'07:30',ai:73,status:'active'},
+            {id:'#1039',route:'Достык → БИЛ',driver:'Данияр М.',members:'4/4',time:'08:15',ai:88,status:'completed'},
+            {id:'#1038',route:'Медеу → НИШ',driver:'Нурлан А.',members:'4/4',time:'07:45',ai:92,status:'completed'},
+          ].map(t=>`
+            <tr>
+              <td style="font-family:var(--font-display);font-weight:700;color:var(--accent);">${t.id}</td>
+              <td style="font-size:0.875rem;">${t.route}</td>
+              <td style="font-size:0.875rem;">${t.driver}</td>
+              <td style="font-size:0.875rem;">${t.members}</td>
+              <td style="font-size:0.875rem;">${t.time}</td>
+              <td><span class="badge ${t.ai>=90?'badge-green':t.ai>=80?'badge-blue':'badge-gray'}">${t.ai}%</span></td>
+              <td><span class="badge ${t.status==='active'?'badge-green':'badge-gray'}">${t.status==='active'?'Активна':'Завершена'}</span></td>
+              <td><div style="display:flex;gap:0.3rem;"><button class="btn btn-secondary btn-sm">👁️</button><button class="btn btn-danger btn-sm">✕</button></div></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

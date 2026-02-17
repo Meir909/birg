@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Аналитика — Birge</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.bar-chart { display:flex; align-items:flex-end; gap:0.4rem; height:120px; }
+.bar { flex:1; background:linear-gradient(180deg,var(--accent),rgba(61,126,255,0.3)); border-radius:4px 4px 0 0; transition:all 0.3s; cursor:pointer; min-width:20px; }
+.bar:hover { background:linear-gradient(180deg,var(--ai2),rgba(139,92,246,0.3)); }
+.bar-labels { display:flex; gap:0.4rem; margin-top:0.4rem; }
+.bar-label { flex:1; text-align:center; font-size:0.65rem; color:var(--text3); }
+</style>
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  page:'analytics', title:'Аналитика',
+  content:`
+    <div class="page-header">
+      <div class="page-title"><span>Аналитика</span> и статистика</div>
+    </div>
+
+    <!-- AI INSIGHTS -->
+    <div class="ai-card mb-2">
+      <div class="ai-label mb-1"><span class="ai-pulse"></span> AI-инсайты</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+        ${[
+          {icon:'🌿',title:'Экологический вклад',val:'87 кг CO₂',sub:'= 5 посаженных деревьев',color:'var(--accent2)'},
+          {icon:'⏰',title:'Сэкономлено времени',val:'32 часа',sub:'За последние 3 месяца',color:'var(--accent)'},
+          {icon:'💰',title:'Экономия топлива',val:'24,500 ₸',sub:'~820 ₸ в день',color:'#F59E0B'},
+          {icon:'🤖',title:'AI-эффективность',val:'91%',sub:'Оптимальность маршрутов',color:'var(--ai2)'},
+        ].map(i=>`
+          <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:1rem;border-left:3px solid ${i.color};">
+            <div style="font-size:1.3rem;margin-bottom:0.35rem;">${i.icon}</div>
+            <div style="font-size:0.78rem;color:var(--text3);">${i.title}</div>
+            <div style="font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:${i.color};">${i.val}</div>
+            <div style="font-size:0.75rem;color:var(--text2);margin-top:0.2rem;">${i.sub}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="grid-2 mb-2">
+      <!-- MONTHLY CHART -->
+      <div class="card">
+        <h3 class="card-title mb-2">📊 Поездки по месяцам</h3>
+        <div class="bar-chart" id="chart">
+          ${[8,12,15,10,18,22,16,20,14,17,19,12].map((v,i)=>`<div class="bar" style="height:${v/22*100}%" title="${v} поездок"></div>`).join('')}
+        </div>
+        <div class="bar-labels">
+          ${['Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек','Янв','Фев'].map(m=>`<div class="bar-label">${m}</div>`).join('')}
+        </div>
+      </div>
+      <!-- CO2 CHART -->
+      <div class="card">
+        <h3 class="card-title mb-2">🌿 CO₂ экономия (кг)</h3>
+        <div class="bar-chart">
+          ${[2,3.5,4,2.8,5,6,4.5,5.8,4,5,5.5,3.4].map(v=>`<div class="bar" style="height:${v/6*100}%;background:linear-gradient(180deg,var(--accent2),rgba(0,212,170,0.2))"></div>`).join('')}
+        </div>
+        <div class="bar-labels">
+          ${['Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек','Янв','Фев'].map(m=>`<div class="bar-label">${m}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARISON & EFFICIENCY -->
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="card-title mb-2">🏆 Сравнение с другими</h3>
+        ${[
+          {label:'Пунктуальность',val:96,avg:78,color:'var(--accent2)'},
+          {label:'Экономия CO₂',val:87,avg:52,color:'var(--accent)'},
+          {label:'Использование AI',val:91,avg:63,color:'var(--ai2)'},
+          {label:'Рейтинг',val:98,avg:75,color:'#F59E0B'},
+        ].map(c=>`
+          <div style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.4rem;">
+              <span>${c.label}</span>
+              <span>Вы: <strong style="color:${c.color};">${c.val}%</strong> · Среднее: ${c.avg}%</span>
+            </div>
+            <div style="position:relative;height:8px;background:var(--bg3);border-radius:4px;">
+              <div style="width:${c.avg}%;height:100%;background:var(--bg2);border-radius:4px;position:absolute;border-right:2px dashed var(--text3);"></div>
+              <div style="width:${c.val}%;height:100%;background:${c.color};border-radius:4px;position:absolute;"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="card">
+        <h3 class="card-title mb-2">🗺️ Эффективность групп</h3>
+        ${[
+          {route:'Медеу → НИШ',trips:87,eff:94},
+          {route:'Алматы → Школа №5',trips:24,eff:78},
+          {route:'Бостандык → НИШ',trips:17,eff:82},
+        ].map(g=>`
+          <div style="margin-bottom:1rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.3rem;">
+              <span style="font-weight:500;">${g.route}</span>
+              <span style="color:var(--text2);">${g.trips} поездок</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <div class="progress" style="flex:1;"><div class="progress-fill progress-purple" style="width:${g.eff}%"></div></div>
+              <span style="font-family:var(--font-display);font-weight:700;color:var(--ai2);min-width:36px;">${g.eff}%</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

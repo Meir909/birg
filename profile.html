@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Профиль — Birge</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  page:'profile', title:'Профиль',
+  content:`
+    <div class="page-header">
+      <div class="page-title">Мой <span>профиль</span></div>
+    </div>
+    <div class="grid-2" style="align-items:start;">
+      <!-- LEFT -->
+      <div>
+        <div class="card mb-2" style="text-align:center;">
+          <div class="avatar avatar-xl" style="margin:0 auto 1rem;">А</div>
+          <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:800;">Айгерим Нурланова</div>
+          <div class="stars" style="font-size:1.1rem;margin-top:0.25rem;">★★★★★ <span style="color:var(--text2);">4.9</span></div>
+          <div style="font-size:0.85rem;color:var(--text2);margin-top:0.25rem;">128 поездок · Участник с 2024</div>
+          <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap;">
+            <span class="badge badge-blue">👤 Пассажир</span>
+            <span class="badge badge-green">✅ Верифицирован</span>
+            <span class="badge badge-purple">⭐ Топ участник</span>
+          </div>
+          <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
+            <button class="btn btn-primary" style="flex:1;" onclick="toggleEdit()">✏️ Редактировать</button>
+            <button class="btn btn-secondary">🔄 Сменить роль</button>
+          </div>
+        </div>
+
+        <!-- EDIT FORM -->
+        <div class="card mb-2" id="edit-form" style="display:none;">
+          <h3 class="card-title mb-2">✏️ Редактировать профиль</h3>
+          <div class="form-group"><label class="form-label">Имя</label><input class="form-input" value="Айгерим Нурланова"></div>
+          <div class="form-group"><label class="form-label">Телефон</label><input class="form-input" value="+7 (707) 123-45-67" type="tel"></div>
+          <div class="form-group"><label class="form-label">Школа</label><select class="form-select"><option>НИШ Алматы</option></select></div>
+          <div class="form-group"><label class="form-label">Класс ребёнка</label><select class="form-select"><option>6Б</option></select></div>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-primary" style="flex:1;">Сохранить</button>
+            <button class="btn btn-secondary" onclick="toggleEdit()">Отмена</button>
+          </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stat-grid mb-2">
+          <div class="stat-card"><div class="stat-value">128</div><div class="stat-label">Поездок</div></div>
+          <div class="stat-card"><div class="stat-value">340</div><div class="stat-label">Баллов</div></div>
+          <div class="stat-card"><div class="stat-value">87кг</div><div class="stat-label">CO₂ сэкономлено</div></div>
+          <div class="stat-card"><div class="stat-value">32ч</div><div class="stat-label">Времени сэкономлено</div></div>
+        </div>
+
+        <!-- ECO -->
+        <div class="card" style="border-color:rgba(0,212,170,0.3);background:linear-gradient(135deg,rgba(0,212,170,0.05),var(--card));">
+          <h3 class="card-title mb-2">🌿 Экологический вклад</h3>
+          <div style="font-size:0.875rem;color:var(--text2);margin-bottom:1rem;">Вы сэкономили 87 кг CO₂ — это как посадить 5 деревьев!</div>
+          <div class="progress mb-1"><div class="progress-fill progress-green" style="width:87%"></div></div>
+          <div style="font-size:0.8rem;color:var(--text3);">87 из 100 кг до следующего уровня</div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <!-- AI INSIGHTS -->
+        <div class="ai-card mb-2">
+          <div class="ai-label mb-1"><span class="ai-pulse"></span> AI-анализ эффективности</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:1rem;">Персональные инсайты</h3>
+          ${[
+            {icon:'🎯',title:'Оптимальность маршрутов',val:88,text:'Вы участвуете в хорошо оптимизированных группах'},
+            {icon:'⏱️',title:'Пунктуальность',val:96,text:'Вы всегда готовы вовремя — отличный показатель!'},
+            {icon:'👥',title:'Совместимость с группами',val:91,text:'Ваш профиль хорошо совпадает с другими'},
+          ].map(i=>`
+            <div style="margin-bottom:1rem;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">
+                <span style="font-size:0.875rem;">${i.icon} ${i.title}</span>
+                <strong style="color:var(--accent2);">${i.val}%</strong>
+              </div>
+              <div class="progress mb-1"><div class="progress-fill progress-purple" style="width:${i.val}%"></div></div>
+              <div style="font-size:0.78rem;color:var(--text3);">${i.text}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- BADGES -->
+        <div class="card mb-2">
+          <h3 class="card-title mb-2">🏅 Достижения</h3>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;">
+            ${[
+              {emoji:'🚀',name:'Первая поездка',earned:true},
+              {emoji:'💎',name:'10 поездок',earned:true},
+              {emoji:'🌿',name:'Эко-чемпион',earned:true},
+              {emoji:'⭐',name:'Топ рейтинг',earned:true},
+              {emoji:'👑',name:'100 поездок',earned:false},
+              {emoji:'🔥',name:'Месяц подряд',earned:false},
+            ].map(b=>`
+              <div style="text-align:center;padding:0.75rem;background:var(--bg2);border-radius:var(--radius-sm);border:1px solid var(--border);opacity:${b.earned?1:0.4};">
+                <div style="font-size:1.5rem;">${b.emoji}</div>
+                <div style="font-size:0.72rem;margin-top:0.25rem;color:var(--text2);">${b.name}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="card">
+          <h3 class="card-title mb-2">⭐ Отзывы (12)</h3>
+          ${[
+            {name:'Нурлан А.',stars:'★★★★★',text:'Очень пунктуальная, всегда на месте вовремя!'},
+            {name:'Диана М.',stars:'★★★★★',text:'Приятно ездить вместе, ребёнок доволен.'},
+          ].map(r=>`
+            <div style="padding:0.75rem 0;border-bottom:1px solid var(--border);">
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.35rem;">
+                <strong style="font-size:0.875rem;">${r.name}</strong>
+                <span style="color:#F59E0B;font-size:0.85rem;">${r.stars}</span>
+              </div>
+              <div style="font-size:0.82rem;color:var(--text2);">${r.text}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `
+});
+function toggleEdit(){
+  const f=document.getElementById('edit-form');
+  f.style.display=f.style.display==='none'?'block':'none';
+}
+</script>
+</body>
+</html>

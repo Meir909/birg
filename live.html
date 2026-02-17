@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live Трекинг — Birge</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.live-badge {
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.3);
+  color:var(--accent3);padding:0.3rem 0.75rem;border-radius:20px;font-size:0.82rem;font-weight:700;
+}
+.live-dot { width:8px;height:8px;border-radius:50%;background:var(--accent3);animation:pulse 1.2s ease-in-out infinite; }
+.sos-btn {
+  background:linear-gradient(135deg,var(--accent3),#DC2626);color:white;
+  border:none;border-radius:var(--radius);padding:1rem;width:100%;cursor:pointer;
+  font-family:var(--font-display);font-size:1.1rem;font-weight:800;
+  box-shadow:0 4px 16px rgba(255,107,107,0.3);transition:all 0.2s;
+}
+.sos-btn:hover { transform:scale(1.02);box-shadow:0 6px 24px rgba(255,107,107,0.4); }
+</style>
+</head>
+<body>
+<script src="../js/components.js"></script>
+<script>
+buildLayout({
+  page:'mytrips', title:'Live Трекинг',
+  content:`
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+      <a href="trip-detail.html" class="btn btn-secondary btn-sm">← Поездка</a>
+      <div>
+        <div class="page-title" style="font-size:1.3rem;">Live Трекинг</div>
+        <div class="page-subtitle">Медеу → НИШ Алматы</div>
+      </div>
+      <div class="live-badge" style="margin-left:auto;"><div class="live-dot"></div> LIVE</div>
+    </div>
+
+    <!-- AI WARNING -->
+    <div class="ai-card mb-2" style="border-color:rgba(245,158,11,0.3);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(245,158,11,0.02));">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <span style="font-size:1.3rem;">⚠️</span>
+        <div>
+          <div style="font-size:0.75rem;color:#F59E0B;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.2rem;">🤖 AI-предупреждение</div>
+          <div style="font-size:0.875rem;">Небольшая пробка на пр. Достык — задержка ~5 минут. Прибытие теперь ожидается в 08:20.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items:start;">
+      <!-- MAP -->
+      <div>
+        <div class="map-area" style="height:380px;margin-bottom:1rem;">
+          <div class="map-label">
+            <div class="icon" style="animation:pulse 1s infinite;">🚗</div>
+            <div style="font-weight:600;">Водитель в пути</div>
+            <div style="font-size:0.8rem;margin-top:0.25rem;color:var(--text3);">Live карта</div>
+          </div>
+        </div>
+        <!-- STOPS -->
+        <div class="card">
+          <h3 class="card-title mb-2">📍 Остановки</h3>
+          ${[
+            {name:'🚗 Выехал — Медеу',time:'07:45',status:'done',eta:'—'},
+            {name:'📍 Мадина С. — пр. Достык',time:'07:52',status:'done',eta:'—'},
+            {name:'📍 Айгерим Н. — ул. Абая',time:'08:01',status:'current',eta:'3 мин'},
+            {name:'📍 Данияр К. — Розыбакиева',time:'08:09',status:'next',eta:'12 мин'},
+            {name:'🏫 НИШ Алматы',time:'08:20',status:'next',eta:'~23 мин'},
+          ].map(s=>`
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid var(--border);">
+              <div style="width:10px;height:10px;border-radius:50%;background:${s.status==='done'?'var(--accent2)':s.status==='current'?'var(--accent)':'var(--border)'};flex-shrink:0;"></div>
+              <div style="flex:1;font-size:0.875rem;${s.status==='done'?'color:var(--text3);text-decoration:line-through':s.status==='current'?'font-weight:600;':''}">${s.name}</div>
+              <div style="font-size:0.8rem;color:var(--text2);">${s.status==='current'?`<span style="color:var(--accent);font-weight:600;">≈ ${s.eta}</span>`:s.status==='next'?`≈ ${s.eta}`:s.time}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div>
+        <!-- AI ETA -->
+        <div class="ai-card mb-2">
+          <div class="ai-label mb-1"><span class="ai-pulse"></span> AI-прогноз прибытия</div>
+          <div style="display:flex;gap:2rem;margin-bottom:1rem;">
+            <div><div style="font-size:0.78rem;color:var(--text3);">Текущая позиция</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.2rem;">ул. Абая</div></div>
+            <div><div style="font-size:0.78rem;color:var(--text3);">Осталось</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.2rem;">~23 мин</div></div>
+            <div><div style="font-size:0.78rem;color:var(--text3);">Прибытие</div><div style="font-family:var(--font-display);font-weight:700;font-size:1.2rem;color:var(--accent2);">08:20</div></div>
+          </div>
+          <div class="progress"><div class="progress-fill progress-purple" style="width:55%"></div></div>
+          <div style="font-size:0.78rem;color:var(--text3);margin-top:0.35rem;">Выполнено 55% маршрута</div>
+        </div>
+
+        <!-- PARTICIPANTS STATUS -->
+        <div class="card mb-2">
+          <h3 class="card-title mb-2">👥 Участники</h3>
+          ${[
+            {name:'Нурлан А.',role:'Водитель',status:'Ведёт',emoji:'🚗'},
+            {name:'Мадина С.',role:'Пассажир',status:'В машине',emoji:'✅'},
+            {name:'Айгерим Н.',role:'Пассажир',status:'Ожидает',emoji:'⏳'},
+            {name:'Данияр К.',role:'Пассажир',status:'Ожидает',emoji:'⏳'},
+          ].map(p=>`
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid var(--border);">
+              <div class="avatar avatar-sm">${p.name[0]}</div>
+              <div style="flex:1;"><div style="font-size:0.875rem;">${p.name}</div><div style="font-size:0.75rem;color:var(--text2);">${p.role}</div></div>
+              <div style="font-size:0.85rem;">${p.emoji} ${p.status}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- CONTACTS -->
+        <div class="card mb-2">
+          <h3 class="card-title mb-1">📞 Контакты</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.75rem;">
+            <button class="btn btn-secondary btn-sm">📞 Нурлан</button>
+            <button class="btn btn-secondary btn-sm">📞 Мадина</button>
+            <button class="btn btn-secondary btn-sm">📞 Айгерим</button>
+            <button class="btn btn-secondary btn-sm">📞 Данияр</button>
+          </div>
+        </div>
+
+        <!-- SOS -->
+        <button class="sos-btn" onclick="alert('SOS сигнал отправлен доверенным контактам!')">🆘 ЭКСТРЕННАЯ КНОПКА SOS</button>
+        <div style="font-size:0.75rem;color:var(--text3);text-align:center;margin-top:0.5rem;">Нажмите для отправки местоположения</div>
+      </div>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

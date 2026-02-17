@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Дашборд — Birge</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  page: 'dashboard', title: 'Дашборд',
+  content: `
+    <div class="page-header flex justify-between items-center">
+      <div>
+        <div class="page-title">Привет, Айгерим! 👋</div>
+        <div class="page-subtitle">Вторник, 17 февраля 2026</div>
+      </div>
+      <div style="display:flex;gap:0.75rem;">
+        <a href="search.html" class="btn btn-secondary">🔍 Найти поездку</a>
+        <a href="trip-create.html" class="btn btn-primary">➕ Создать поездку</a>
+      </div>
+    </div>
+
+    <!-- AI RECOMMENDATIONS -->
+    <div class="ai-card mb-2">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <div>
+          <div class="ai-label" style="margin-bottom:0.5rem;"><span class="ai-pulse"></span>AI-Рекомендации</div>
+          <h3 style="font-family:var(--font-display);font-weight:700;">Топ-3 подходящих группы</h3>
+        </div>
+        <a href="ai-match.html" class="btn btn-ai btn-sm">Все варианты</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+        ${[
+          {name:'Группа Алматы-1', match:96, members:4, time:'07:45', ai:'Идеально совпадает район', color:'var(--accent2)'},
+          {name:'Группа Медеу', match:88, members:3, time:'08:00', ai:'Небольшой крюк — +4 мин', color:'var(--accent)'},
+          {name:'Группа Бостандык', match:74, members:5, time:'07:30', ai:'Раньше выезд, но ближе', color:'#F59E0B'},
+        ].map(g => `
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.5rem;">
+              <div style="font-weight:600;font-size:0.9rem;">${g.name}</div>
+              <div class="match-score" style="color:${g.color};font-size:1.2rem;">${g.match}%</div>
+            </div>
+            <div style="font-size:0.8rem;color:var(--text2);">👥 ${g.members} участника · ⏰ ${g.time}</div>
+            <div style="font-size:0.78rem;color:var(--ai2);margin-top:0.4rem;">🤖 ${g.ai}</div>
+            <button class="btn btn-primary btn-sm" style="width:100%;margin-top:0.75rem;">Подать заявку</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stat-grid mb-2">
+      <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Поездок в этом месяце</div><div class="stat-change">↑ +3 к прошлому</div></div>
+      <div class="stat-card"><div class="stat-value">340</div><div class="stat-label">Накопленных баллов</div><div class="stat-change">↑ +20 сегодня</div></div>
+      <div class="stat-card"><div class="stat-value">18кг</div><div class="stat-label">CO₂ сэкономлено</div><div class="stat-change">🌿 Молодец!</div></div>
+      <div class="stat-card"><div class="stat-value">4.9★</div><div class="stat-label">Ваш рейтинг</div><div class="stat-change">⭐ Топ 5%</div></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- ACTIVE TRIPS -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">📅 Активные поездки</h3>
+          <a href="my-trips.html" class="btn btn-secondary btn-sm">Все →</a>
+        </div>
+        ${[
+          {day:'Сегодня', time:'07:45', route:'Ул. Абая → НИЛ Школа №5', status:'active', members:4},
+          {day:'Завтра', time:'07:45', route:'Ул. Абая → НИЛ Школа №5', status:'upcoming', members:4},
+          {day:'Чт, 19 фев', time:'08:00', route:'Медеу → Школа №1', status:'upcoming', members:3},
+        ].map(t => `
+          <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--border);">
+            <div style="text-align:center;min-width:64px;">
+              <div style="font-size:0.7rem;color:var(--text3);">${t.day}</div>
+              <div style="font-family:var(--font-display);font-weight:700;font-size:1rem;">${t.time}</div>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:0.875rem;font-weight:500;">${t.route}</div>
+              <div style="font-size:0.78rem;color:var(--text2);margin-top:0.15rem;">👥 ${t.members} участника</div>
+            </div>
+            <span class="badge ${t.status==='active'?'badge-green':'badge-gray'}">${t.status==='active'?'Сейчас':'Скоро'}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">🔔 Уведомления</h3>
+          <a href="notifications.html" class="btn btn-secondary btn-sm">Все →</a>
+        </div>
+        ${[
+          {icon:'✅', msg:'Азиз принял вашу заявку', time:'5 мин назад', color:'var(--accent2)'},
+          {icon:'🤖', msg:'AI: Нашли 2 новые подходящие группы', time:'1 час назад', color:'var(--ai2)'},
+          {icon:'📍', msg:'Поездка начнётся через 30 минут', time:'2 часа назад', color:'var(--accent)'},
+          {icon:'⭐', msg:'Нурлан оставил отзыв — 5 звёзд', time:'Вчера', color:'#F59E0B'},
+        ].map(n => `
+          <div style="display:flex;align-items:start;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:1.1rem;line-height:1;">${n.icon}</span>
+            <div style="flex:1;">
+              <div style="font-size:0.875rem;">${n.msg}</div>
+              <div style="font-size:0.75rem;color:var(--text3);margin-top:0.15rem;">${n.time}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

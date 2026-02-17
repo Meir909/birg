@@ -1,0 +1,14 @@
+{
+  "name": "birge",
+  "version": "1.0.0",
+  "description": "Birge — Совместные поездки в школу",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000"
+  },
+  "keywords": ["carpooling", "school", "rides", "kazakhstan"],
+  "author": "Birge Team",
+  "license": "MIT",
+  "type": "commonjs"
+}

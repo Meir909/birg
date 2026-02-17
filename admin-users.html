@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Пользователи — Birge Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+const users = [
+  {name:'Айгерим Нурланова',phone:'+7 (707) 123-45-67',role:'Пассажир',school:'НИШ',trips:128,rating:4.9,status:'active',ai:'Высокая активность'},
+  {name:'Нурлан Аленов',phone:'+7 (700) 234-56-78',role:'Водитель',school:'НИШ',trips:247,rating:4.9,status:'active',ai:'Топ водитель'},
+  {name:'Диана Сейткали',phone:'+7 (701) 345-67-89',role:'Пассажир',school:'Школа №5',trips:43,rating:4.7,status:'active',ai:'Средняя активность'},
+  {name:'Азат Нурмагамбетов',phone:'+7 (702) 456-78-90',role:'Водитель',school:'БИЛ',trips:89,rating:4.5,status:'blocked',ai:'1 жалоба'},
+  {name:'Мадина Сарсенова',phone:'+7 (705) 567-89-01',role:'Пассажир',school:'НИШ',trips:21,rating:5.0,status:'active',ai:'Новый пользователь'},
+];
+buildLayout({
+  isAdmin:true, adminPage:'users', title:'Пользователи',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div class="page-title">Пользователи</div>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <input class="form-input" placeholder="Поиск..." style="width:220px;">
+        <select class="form-select" style="width:auto;"><option>Все роли</option><option>Водители</option><option>Пассажиры</option></select>
+        <select class="form-select" style="width:auto;"><option>Все статусы</option><option>Активные</option><option>Заблокированные</option></select>
+      </div>
+    </div>
+
+    <!-- AI PROFILING note -->
+    <div class="ai-card mb-2" style="padding:0.75rem 1rem;">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div class="ai-label"><span class="ai-pulse"></span> AI-профилирование</div>
+        <div style="font-size:0.82rem;color:var(--text2);">AI анализирует паттерны поведения и автоматически выявляет аномалии</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Пользователь</th>
+            <th>Телефон</th>
+            <th>Роль</th>
+            <th>Школа</th>
+            <th>Поездок</th>
+            <th>Рейтинг</th>
+            <th>AI-инсайт</th>
+            <th>Статус</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${users.map(u=>`
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:0.5rem;"><div class="avatar avatar-sm">${u.name[0]}</div><span style="font-size:0.875rem;">${u.name}</span></div></td>
+              <td style="color:var(--text2);font-size:0.82rem;">${u.phone}</td>
+              <td><span class="badge ${u.role==='Водитель'?'badge-blue':'badge-gray'}">${u.role}</span></td>
+              <td style="font-size:0.82rem;">${u.school}</td>
+              <td style="font-family:var(--font-display);font-weight:700;">${u.trips}</td>
+              <td><span style="color:#F59E0B;">★</span> ${u.rating}</td>
+              <td style="font-size:0.78rem;color:var(--ai2);">🤖 ${u.ai}</td>
+              <td><span class="badge ${u.status==='active'?'badge-green':'badge-red'}">${u.status==='active'?'Активен':'Заблокирован'}</span></td>
+              <td>
+                <div style="display:flex;gap:0.3rem;">
+                  <button class="btn btn-secondary btn-sm">👁️</button>
+                  <button class="btn ${u.status==='active'?'btn-danger':'btn-success'} btn-sm">${u.status==='active'?'🔒':'🔓'}</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;font-size:0.875rem;color:var(--text2);">
+      <span>Показано 5 из 1,247 пользователей</span>
+      <div style="display:flex;gap:0.5rem;">
+        <button class="btn btn-secondary btn-sm">← Пред.</button>
+        <button class="btn btn-secondary btn-sm active">1</button>
+        <button class="btn btn-secondary btn-sm">2</button>
+        <button class="btn btn-secondary btn-sm">3</button>
+        <button class="btn btn-secondary btn-sm">След. →</button>
+      </div>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

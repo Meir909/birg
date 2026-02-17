@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Настройки — Birge</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.toggle { position:relative;width:44px;height:24px;cursor:pointer; }
+.toggle input { opacity:0;width:0;height:0; }
+.toggle-slider { position:absolute;inset:0;background:var(--bg3);border-radius:24px;transition:0.3s; }
+.toggle-slider:before { content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:0.3s; }
+.toggle input:checked + .toggle-slider { background:var(--accent); }
+.toggle input:checked + .toggle-slider:before { transform:translateX(20px); }
+.setting-row { display:flex;align-items:center;justify-content:space-between;padding:0.9rem 0;border-bottom:1px solid var(--border); }
+.setting-info h4 { font-size:0.9rem;font-weight:500; }
+.setting-info p { font-size:0.78rem;color:var(--text2);margin-top:0.15rem; }
+</style>
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  page:'settings', title:'Настройки',
+  content:`
+    <div class="page-header">
+      <div class="page-title">Настройки</div>
+    </div>
+    <div style="max-width:700px;">
+      
+      <!-- NOTIFICATIONS -->
+      <div class="card mb-2">
+        <h3 class="card-title mb-2">🔔 Уведомления</h3>
+        ${[
+          {title:'Push-уведомления',desc:'Уведомления в браузере/приложении',on:true},
+          {title:'SMS уведомления',desc:'Важные события по SMS',on:true},
+          {title:'Напоминание о поездке',desc:'За 30 минут до выезда',on:true},
+          {title:'Новые заявки',desc:'Когда кто-то хочет присоединиться',on:true},
+          {title:'Статус участников',desc:'Подтверждения и отмены',on:false},
+          {title:'Маркетинговые',desc:'Новости и обновления Birge',on:false},
+        ].map(s=>`
+          <div class="setting-row">
+            <div class="setting-info"><h4>${s.title}</h4><p>${s.desc}</p></div>
+            <label class="toggle"><input type="checkbox" ${s.on?'checked':''}><span class="toggle-slider"></span></label>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- SECURITY -->
+      <div class="card mb-2">
+        <h3 class="card-title mb-2">🔒 Безопасность</h3>
+        <div class="setting-row">
+          <div class="setting-info"><h4>Двухфакторная аутентификация</h4><p>SMS-подтверждение при входе</p></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info"><h4>Видимость профиля</h4><p>Другие пользователи могут видеть ваш профиль</p></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div style="margin-top:1rem;">
+          <button class="btn btn-secondary btn-sm">🔑 Изменить PIN</button>
+        </div>
+      </div>
+
+      <!-- SOS CONTACTS -->
+      <div class="card mb-2">
+        <h3 class="card-title mb-2">🆘 Доверенные контакты SOS</h3>
+        ${[
+          {name:'Назгуль Нурланова',rel:'Супруга',phone:'+7 (700) 111-22-33'},
+          {name:'Аскар Нурланов',rel:'Муж',phone:'+7 (701) 444-55-66'},
+        ].map(c=>`
+          <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid var(--border);">
+            <div class="avatar avatar-sm">${c.name[0]}</div>
+            <div style="flex:1;"><div style="font-size:0.875rem;font-weight:500;">${c.name}</div><div style="font-size:0.78rem;color:var(--text2);">${c.rel} · ${c.phone}</div></div>
+            <button class="btn btn-secondary btn-sm">✏️</button>
+            <button class="btn btn-danger btn-sm">✕</button>
+          </div>
+        `).join('')}
+        <button class="btn btn-secondary btn-sm" style="margin-top:0.75rem;">➕ Добавить контакт</button>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="card mb-2">
+        <h3 class="card-title mb-2">📅 Расписание доступности</h3>
+        <div class="form-group">
+          <label class="form-label">Дни недели</label>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            ${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map((d,i)=>`<div class="chip ${i<5?'active':''}">${d}</div>`).join('')}
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group"><label class="form-label">Утро (выезд)</label><input class="form-input" type="time" value="07:00"></div>
+          <div class="form-group"><label class="form-label">Вечер (возврат)</label><input class="form-input" type="time" value="16:00"></div>
+        </div>
+      </div>
+
+      <!-- AI SETTINGS -->
+      <div class="ai-card mb-2">
+        <div class="ai-label mb-1"><span class="ai-pulse"></span> Настройки AI-помощника</div>
+        <h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:1rem;">Персонализация AI</h3>
+        ${[
+          {title:'AI-рекомендации',desc:'Получать умные подсказки от AI'},
+          {title:'Уведомления AI',desc:'Предупреждения о трафике и задержках'},
+          {title:'Автоподбор групп',desc:'AI автоматически ищет новые группы'},
+        ].map(s=>`
+          <div class="setting-row" style="border-bottom:1px solid rgba(139,92,246,0.15);">
+            <div class="setting-info"><h4>${s.title}</h4><p>${s.desc}</p></div>
+            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+          </div>
+        `).join('')}
+        <div class="form-group" style="margin-top:1rem;">
+          <label class="form-label">Стиль общения AI</label>
+          <select class="form-select" style="background:var(--bg);">
+            <option>Краткий и по делу</option>
+            <option>Подробный</option>
+            <option>Дружелюбный</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" style="border-color:rgba(255,107,107,0.2);">
+        <h3 class="card-title mb-1" style="color:var(--accent3);">⚠️ Опасная зона</h3>
+        <p style="font-size:0.875rem;color:var(--text2);margin-bottom:1rem;">Удаление аккаунта — необратимое действие.</p>
+        <button class="btn btn-danger btn-sm" onclick="confirm('Вы уверены?')">Удалить аккаунт</button>
+      </div>
+
+      <div style="margin-top:1.5rem;">
+        <button class="btn btn-primary">💾 Сохранить настройки</button>
+      </div>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

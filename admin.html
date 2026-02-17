@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Админ — Birge</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.activity-bar { display:flex;align-items:flex-end;gap:3px;height:60px; }
+.a-bar { flex:1;background:linear-gradient(180deg,var(--accent),rgba(61,126,255,0.2));border-radius:2px 2px 0 0; }
+</style>
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  isAdmin:true, adminPage:'dashboard', title:'Админ — Дашборд',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div>
+        <div class="page-title">Панель администратора</div>
+        <div class="page-subtitle">Обзор состояния платформы Birge</div>
+      </div>
+      <span class="badge badge-green">● Система работает нормально</span>
+    </div>
+
+    <div class="stat-grid mb-2">
+      <div class="stat-card"><div class="stat-value">1,247</div><div class="stat-label">Пользователей всего</div><div class="stat-change">↑ +23 сегодня</div></div>
+      <div class="stat-card"><div class="stat-value">8,930</div><div class="stat-label">Поездок всего</div><div class="stat-change">↑ +47 сегодня</div></div>
+      <div class="stat-card"><div class="stat-value">47</div><div class="stat-label">Активных школ</div></div>
+      <div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Открытых жалоб</div><div class="stat-change" style="color:var(--accent3);">⚠️ Требуют внимания</div></div>
+      <div class="stat-card"><div class="stat-value">94%</div><div class="stat-label">Точность AI</div><div class="stat-change">🤖 Gemini Flash</div></div>
+      <div class="stat-card"><div class="stat-value">312</div><div class="stat-label">AI-подборов сегодня</div></div>
+    </div>
+
+    <div class="grid-2 mb-2">
+      <div class="card">
+        <h3 class="card-title mb-2">📊 Активность за неделю</h3>
+        <div class="activity-bar">
+          ${[30,45,60,42,80,95,72].map(v=>`<div class="a-bar" style="height:${v}%;"></div>`).join('')}
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:0.35rem;">
+          ${['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(d=>`<span style="font-size:0.65rem;color:var(--text3);flex:1;text-align:center;">${d}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title mb-2">🤖 AI Метрики</h3>
+        ${[
+          {label:'Точность матчинга',val:94,color:'var(--ai2)'},
+          {label:'Использование сегодня',val:78,color:'var(--accent)'},
+          {label:'Успешность подборов',val:87,color:'var(--accent2)'},
+        ].map(m=>`
+          <div style="margin-bottom:0.75rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.3rem;"><span style="color:var(--text2);">${m.label}</span><strong style="color:${m.color};">${m.val}%</strong></div>
+            <div class="progress"><div class="progress-fill" style="width:${m.val}%;background:${m.color};"></div></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- QUICK ACCESS -->
+    <div class="card">
+      <h3 class="card-title mb-2">⚡ Быстрый доступ</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;">
+        ${[
+          {href:'admin-users.html',icon:'👥',label:'Пользователи'},
+          {href:'admin-trips.html',icon:'🚗',label:'Поездки'},
+          {href:'admin-complaints.html',icon:'⚠️',label:'Жалобы (5)'},
+          {href:'admin-schools.html',icon:'🏫',label:'Школы'},
+          {href:'admin-ai.html',icon:'🤖',label:'AI Мониторинг'},
+        ].map(l=>`<a href="${l.href}" class="btn btn-secondary" style="flex-direction:column;padding:1rem;gap:0.35rem;text-align:center;">${l.icon}<span style="font-size:0.8rem;">${l.label}</span></a>`).join('')}
+      </div>
+    </div>
+  `
+});
+</script>
+</body>
+</html>

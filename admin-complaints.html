@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Жалобы — Birge Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  isAdmin:true, adminPage:'complaints', title:'Жалобы',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div class="page-title">Жалобы <span style="color:var(--accent3);">(5)</span></div>
+    </div>
+    <!-- AI PRIORITIZATION -->
+    <div class="ai-card mb-2">
+      <div class="ai-label mb-1"><span class="ai-pulse"></span>AI-приоритизация жалоб</div>
+      <p style="font-size:0.82rem;color:var(--text2);">AI автоматически категоризировал и расставил приоритеты. 2 жалобы требуют немедленного внимания.</p>
+      <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
+        <span class="badge badge-red">🔴 Критично: 2</span>
+        <span class="badge badge-blue">🟡 Средне: 2</span>
+        <span class="badge badge-gray">⚪ Низко: 1</span>
+      </div>
+    </div>
+    ${[
+      {id:'#C005',from:'Айгерим Н.',on:'Азат М.',cat:'Опоздание',priority:'high',ai:'Повторное нарушение (3-е подряд)',status:'open',date:'Сегодня 09:15'},
+      {id:'#C004',from:'Мадина С.',on:'Данияр К.',cat:'Грубость',priority:'high',ai:'Первая жалоба на водителя',status:'open',date:'Сегодня 07:30'},
+      {id:'#C003',from:'Ерлан М.',on:'Самал Н.',cat:'Не забрал ребёнка',priority:'medium',ai:'Водитель объяснил пробку',status:'investigating',date:'Вчера'},
+      {id:'#C002',from:'Диана К.',on:'Азиз Б.',cat:'Сломана безопасность',priority:'medium',ai:'Технический сбой',status:'investigating',date:'15 фев'},
+      {id:'#C001',from:'Нурлан А.',on:'Система',priority:'low',cat:'Ошибка в уведомлениях',ai:'Баг исправлен в v2.1',status:'resolved',date:'12 фев'},
+    ].map(c=>`
+      <div class="card mb-1" style="border-left:3px solid ${c.priority==='high'?'var(--accent3)':c.priority==='medium'?'#F59E0B':'var(--border)'};">
+        <div style="display:flex;align-items:start;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;margin-bottom:0.75rem;">
+          <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;">
+              <span style="font-family:var(--font-display);font-weight:700;color:var(--accent);">${c.id}</span>
+              <span class="badge ${c.priority==='high'?'badge-red':c.priority==='medium'?'':'badge-gray'}">${c.priority==='high'?'🔴 Критично':c.priority==='medium'?'🟡 Средне':'⚪ Низко'}</span>
+              <span class="badge badge-gray">${c.cat}</span>
+            </div>
+            <div style="font-size:0.82rem;color:var(--text2);">${c.from} → жалоба на → ${c.on}</div>
+            <div style="font-size:0.78rem;color:var(--text3);">${c.date}</div>
+          </div>
+          <span class="badge ${c.status==='open'?'badge-red':c.status==='investigating'?'badge-blue':'badge-green'}">${c.status==='open'?'Открыта':c.status==='investigating'?'Рассматривается':'Решена'}</span>
+        </div>
+        <div style="font-size:0.82rem;color:var(--ai2);margin-bottom:0.75rem;">🤖 ${c.ai}</div>
+        ${c.status!=='resolved'?`<div style="display:flex;gap:0.5rem;">
+          <button class="btn btn-secondary btn-sm">📋 Рассмотреть</button>
+          <button class="btn btn-secondary btn-sm">⚠️ Предупреждение</button>
+          <button class="btn btn-danger btn-sm">🚫 Заблокировать</button>
+        </div>`:'<span class="badge badge-green">✅ Решено</span>'}
+      </div>
+    `).join('')}
+  `
+});
+</script>
+</body>
+</html>

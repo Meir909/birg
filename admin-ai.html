@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Мониторинг — Birge Admin</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.log-item { padding:0.6rem 0.75rem; background:var(--bg2); border-radius:6px; margin-bottom:4px; font-size:0.78rem; display:flex; gap:0.75rem; }
+.log-time { color:var(--text3); flex-shrink:0; width:60px; }
+.log-level { flex-shrink:0; width:50px; font-weight:600; }
+.log-ok { color:var(--accent2); }
+.log-warn { color:#F59E0B; }
+.log-err { color:var(--accent3); }
+</style>
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  isAdmin:true, adminPage:'ai', title:'AI Мониторинг',
+  content:`
+    <div class="page-header flex justify-between items-center">
+      <div>
+        <div class="page-title">AI <span>Мониторинг</span></div>
+        <div class="page-subtitle">Статистика и производительность Gemini Flash 2.5</div>
+      </div>
+      <div class="ai-label"><span class="ai-pulse"></span> Gemini Flash 2.5 · Онлайн</div>
+    </div>
+
+    <div class="stat-grid mb-2">
+      <div class="stat-card"><div class="stat-value">312</div><div class="stat-label">Запросов сегодня</div><div class="stat-change">↑ +18%</div></div>
+      <div class="stat-card"><div class="stat-value">94%</div><div class="stat-label">Точность матчинга</div><div class="stat-change">↑ +2% за месяц</div></div>
+      <div class="stat-card"><div class="stat-value">87%</div><div class="stat-label">Успешность подборов</div></div>
+      <div class="stat-card"><div class="stat-value">1.2с</div><div class="stat-label">Среднее время ответа</div><div class="stat-change" style="color:var(--accent2);">Норма &lt;2с</div></div>
+      <div class="stat-card"><div class="stat-value">₸ 4,200</div><div class="stat-label">API calls сегодня</div></div>
+      <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Ошибок за день</div><div class="stat-change" style="color:var(--accent2);">Норма &lt;5</div></div>
+    </div>
+
+    <div class="grid-2 mb-2">
+      <!-- USAGE BY FEATURE -->
+      <div class="card">
+        <h3 class="card-title mb-2">📊 Использование по функциям</h3>
+        ${[
+          {name:'Матчинг групп',calls:147,pct:47,color:'var(--ai)'},
+          {name:'Оптимизация маршрута',calls:89,pct:28,color:'var(--accent)'},
+          {name:'AI-ассистент (чат)',calls:54,pct:17,color:'var(--accent2)'},
+          {name:'Прогноз прибытия',calls:22,pct:7,color:'#F59E0B'},
+        ].map(f=>`
+          <div style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid var(--border);">
+            <div style="width:8px;height:32px;border-radius:4px;background:${f.color};flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="font-size:0.82rem;font-weight:500;">${f.name}</div>
+              <div style="font-size:0.75rem;color:var(--text3);">${f.calls} вызовов</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:var(--font-display);font-weight:700;font-size:1rem;">${f.pct}%</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- ACCURACY METRICS -->
+      <div class="card">
+        <h3 class="card-title mb-2">🎯 Метрики точности</h3>
+        ${[
+          {label:'Матчинг — принято пользователями',val:87},
+          {label:'Маршрут — точность прогноза',val:93},
+          {label:'ETA — отклонение &lt;3 мин',val:91},
+          {label:'Жалобы — правильная приоритизация',val:96},
+        ].map(m=>`
+          <div style="margin-bottom:0.9rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:0.3rem;"><span style="color:var(--text2);">${m.label}</span><strong style="color:var(--ai2);">${m.val}%</strong></div>
+            <div class="progress"><div class="progress-fill progress-purple" style="width:${m.val}%"></div></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- AI PARAMETERS -->
+    <div class="ai-card mb-2">
+      <div class="ai-label mb-2"><span class="ai-pulse"></span> Настройки AI-параметров</div>
+      <div class="grid-3">
+        <div class="form-group">
+          <label class="form-label">Радиус кластеризации (км)</label>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <input type="range" min="1" max="10" value="3" style="flex:1;" oninput="this.nextElementSibling.textContent=this.value+'км'">
+            <span style="color:var(--ai2);min-width:40px;">3км</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Порог совместимости (%)</label>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <input type="range" min="50" max="100" value="75" style="flex:1;" oninput="this.nextElementSibling.textContent=this.value+'%'">
+            <span style="color:var(--ai2);min-width:40px;">75%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Вес: время vs расстояние</label>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <input type="range" min="0" max="100" value="60" style="flex:1;" oninput="this.nextElementSibling.textContent=this.value+'%'">
+            <span style="color:var(--ai2);min-width:40px;">60%</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-ai btn-sm" style="margin-top:0.5rem;">💾 Сохранить параметры</button>
+    </div>
+
+    <!-- LOGS -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">📝 Логи AI (последние 10)</h3>
+        <select class="form-select" style="width:auto;font-size:0.8rem;"><option>Все уровни</option><option>Ошибки</option><option>Предупреждения</option></select>
+      </div>
+      ${[
+        {t:'09:47',l:'ok',msg:'Матчинг завершён: 47 групп, 312 пользователей'},
+        {t:'09:45',l:'ok',msg:'Оптимизация маршрута #1042 — 94% эффективность'},
+        {t:'09:32',l:'ok',msg:'ETA прогноз: поездка #1041, отклонение 1.2 мин'},
+        {t:'09:15',l:'warn',msg:'Высокая нагрузка: 48 запросов/мин (порог 50)'},
+        {t:'08:58',l:'ok',msg:'AI-ассистент: 12 сессий, avg 4.2 сообщения'},
+        {t:'08:30',l:'err',msg:'Gemini API timeout (retry 1/3) — решено'},
+        {t:'08:29',l:'err',msg:'Ошибка кластеризации района Алатау — retry OK'},
+        {t:'08:00',l:'ok',msg:'Ежедневная переобучение модели завершено'},
+        {t:'07:45',l:'ok',msg:'Пиковая нагрузка: 47 активных поездок'},
+        {t:'07:30',l:'ok',msg:'Система запущена, все компоненты в норме'},
+      ].map(log=>`
+        <div class="log-item">
+          <span class="log-time">${log.t}</span>
+          <span class="log-level ${log.l==='ok'?'log-ok':log.l==='warn'?'log-warn':'log-err'}">${log.l.toUpperCase()}</span>
+          <span>${log.msg}</span>
+        </div>
+      `).join('')}
+    </div>
+  `
+});
+</script>
+</body>
+</html>

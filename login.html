@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Войти — Birge</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:2rem; }
+.auth-wrap { width:100%; max-width:420px; animation:fadeIn 0.5s ease; }
+.auth-logo { text-align:center; margin-bottom:2rem; }
+.auth-logo a { font-family:var(--font-display); font-size:1.8rem; font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-decoration:none; }
+.auth-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; }
+.otp-inputs { display:flex; gap:0.75rem; justify-content:center; margin:1.5rem 0; }
+.otp-inputs input { width:52px; height:56px; text-align:center; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-family:var(--font-display); font-size:1.5rem; font-weight:700; }
+.otp-inputs input:focus { outline:none; border-color:var(--accent); }
+.login-step { display:none; }
+.login-step.active { display:block; }
+</style>
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-logo"><a href="index.html">🚗 Birge</a></div>
+  <div class="auth-card">
+
+    <div class="login-step active" id="ls1">
+      <h2 style="font-family:var(--font-display);font-weight:800;margin-bottom:0.35rem;">Добро пожаловать!</h2>
+      <p style="color:var(--text2);font-size:0.875rem;margin-bottom:2rem;">Введите номер телефона для входа</p>
+      <div class="form-group">
+        <label class="form-label">Номер телефона</label>
+        <input class="form-input" type="tel" placeholder="+7 (___) ___-__-__" id="phone">
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="goLS(2)">Получить код →</button>
+    </div>
+
+    <div class="login-step" id="ls2">
+      <h2 style="font-family:var(--font-display);font-weight:800;margin-bottom:0.35rem;">Введите код</h2>
+      <p style="color:var(--text2);font-size:0.875rem;margin-bottom:0.5rem;">Отправили SMS на <strong id="phone-display"></strong></p>
+      <div class="otp-inputs">
+        <input type="text" maxlength="1"><input type="text" maxlength="1">
+        <input type="text" maxlength="1"><input type="text" maxlength="1">
+        <input type="text" maxlength="1"><input type="text" maxlength="1">
+      </div>
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <span id="timer" style="font-size:0.82rem;color:var(--text2);">Повторить через 59с</span>
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="window.location.href='dashboard.html'">Войти →</button>
+      <button class="btn btn-secondary" style="width:100%;margin-top:0.75rem;" onclick="goLS(1)">← Изменить номер</button>
+    </div>
+
+  </div>
+  <div style="text-align:center;margin-top:1.5rem;color:var(--text2);font-size:0.875rem;">
+    Нет аккаунта? <a href="register.html" style="color:var(--accent);text-decoration:none;">Зарегистрироваться</a>
+  </div>
+</div>
+
+<script>
+function goLS(n) {
+  document.querySelectorAll('.login-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('ls'+n).classList.add('active');
+  if(n===2) {
+    document.getElementById('phone-display').textContent = document.getElementById('phone').value || '+7 (700) XXX-XX-XX';
+    const inputs = document.querySelectorAll('.otp-inputs input');
+    inputs.forEach((inp,i) => inp.addEventListener('input', () => { if(inp.value && i<inputs.length-1) inputs[i+1].focus(); }));
+    let t=59;
+    const el = document.getElementById('timer');
+    const iv = setInterval(() => {
+      t--; el.textContent = t > 0 ? `Повторить через ${t}с` : 'Отправить ещё раз';
+      if(t<=0) { clearInterval(iv); el.style.color='var(--accent)'; el.style.cursor='pointer'; }
+    }, 1000);
+  }
+}
+</script>
+</body>
+</html>

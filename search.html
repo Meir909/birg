@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Поиск поездок — Birge</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="components.js"></script>
+<script>
+buildLayout({
+  page:'search', title:'Поиск поездок',
+  content:`
+    <div class="page-header">
+      <div class="page-title">Найти <span>поездку</span></div>
+      <div class="page-subtitle">Используйте AI или настройте фильтры вручную</div>
+    </div>
+
+    <!-- AI SMART SEARCH -->
+    <div class="ai-card mb-2">
+      <div class="ai-label mb-1"><span class="ai-pulse"></span> Умный подбор AI</div>
+      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+        <input class="form-input" placeholder='Напишите: "Школа №5, завтра в 8:00, Медеу"...' style="flex:1;min-width:240px;background:var(--bg);">
+        <button class="btn btn-ai">🤖 AI Подобрать</button>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
+        ${['Ближайшие группы','Только с водителем 5★','На этой неделе','Мой район'].map(c=>`<div class="chip">${c}</div>`).join('')}
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items:start;">
+      <!-- FILTERS -->
+      <div>
+        <div class="card mb-1">
+          <h3 class="card-title mb-1">🎛️ Фильтры</h3>
+          <div class="form-group">
+            <label class="form-label">Школа</label>
+            <select class="form-select"><option>НИШ Алматы</option><option>Школа №5</option><option>Школа №1</option><option>БИЛ Алматы</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Класс</label>
+            <select class="form-select"><option>Любой</option><option>5</option><option>6</option><option>7</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">День недели</label>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+              ${['Пн','Вт','Ср','Чт','Пт'].map((d,i)=>`<div class="chip ${i<3?'active':''}">${d}</div>`).join('')}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Время выезда</label>
+            <div style="display:flex;gap:0.5rem;">
+              <input class="form-input" type="time" value="07:30" style="flex:1;">
+              <span style="align-self:center;color:var(--text2);">—</span>
+              <input class="form-input" type="time" value="08:30" style="flex:1;">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Радиус поиска</label>
+            <div style="display:flex;align-items:center;gap:1rem;">
+              <input type="range" min="1" max="10" value="3" style="flex:1;" oninput="this.nextElementSibling.textContent=this.value+'км'">
+              <span style="min-width:40px;color:var(--text2);">3км</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;">Найти поездки</button>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+          <div style="font-size:0.875rem;color:var(--text2);">Найдено: <strong style="color:var(--text);">8 поездок</strong></div>
+          <select class="form-select" style="width:auto;">
+            <option>По совместимости</option>
+            <option>По времени</option>
+            <option>По расстоянию</option>
+            <option>По рейтингу</option>
+          </select>
+        </div>
+        <!-- MAP -->
+        <div class="map-area" style="height:200px;margin-bottom:1rem;">
+          <div class="map-label"><div class="icon">🗺️</div><div>Карта с маршрутами</div></div>
+        </div>
+        <!-- TRIP CARDS -->
+        ${[
+          {name:'Нурлан А.',rating:4.9,match:96,time:'07:45',seats:2,route:'Медеу → НИШ',days:['Пн','Вт','Ср','Чт','Пт'],ai:'Оптимально — 96% совместимость'},
+          {name:'Данияр С.',rating:4.7,match:88,time:'08:00',seats:3,route:'Бостандык → НИШ',days:['Пн','Ср','Пт'],ai:'Небольшой крюк +3 мин'},
+          {name:'Асель М.',rating:5.0,match:82,time:'07:30',seats:1,route:'Алмалы → НИШ',days:['Пн','Вт','Чт'],ai:'Ранний выезд, близкий маршрут'},
+        ].map(t=>`
+          <div class="trip-card mb-1">
+            <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:0.75rem;">
+              <div style="display:flex;gap:0.75rem;align-items:center;">
+                <div class="avatar avatar-md">${t.name[0]}</div>
+                <div>
+                  <div style="font-weight:600;">${t.name}</div>
+                  <div class="stars">★★★★★ <span style="color:var(--text2);font-size:0.8rem;">${t.rating}</span></div>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div class="match-score match-high" style="font-size:1.3rem;">${t.match}%</div>
+                <div style="font-size:0.72rem;color:var(--text3);">совместимость</div>
+              </div>
+            </div>
+            <div class="route" style="margin-bottom:0.5rem;">
+              <div class="route-dot start"></div>
+              <div style="font-size:0.85rem;font-weight:500;">${t.route}</div>
+              <div class="route-line"></div>
+              <div class="route-dot end"></div>
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+              <span class="badge badge-blue">⏰ ${t.time}</span>
+              <span class="badge badge-green">💺 ${t.seats} места</span>
+              ${t.days.map(d=>`<span class="badge badge-gray">${d}</span>`).join('')}
+            </div>
+            <div style="font-size:0.78rem;color:var(--ai2);margin-bottom:0.75rem;">🤖 ${t.ai}</div>
+            <!-- MATCH BAR -->
+            <div style="margin-bottom:0.75rem;">
+              <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text3);margin-bottom:0.3rem;"><span>Оптимальность маршрута</span><span>${t.match}%</span></div>
+              <div class="progress"><div class="progress-fill progress-green" style="width:${t.match}%"></div></div>
+            </div>
+            <div style="display:flex;gap:0.5rem;">
+              <a href="trip-detail.html" class="btn btn-secondary btn-sm" style="flex:1;">Подробнее</a>
+              <button class="btn btn-primary btn-sm" style="flex:1;">Подать заявку</button>
+            </div>
+          </div>
+        `).join('')}
+        <button class="btn btn-secondary" style="width:100%;">Загрузить ещё</button>
+      </div>
+    </div>
+  `
+});
+</script>
+</body>
+</html>
